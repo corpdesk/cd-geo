@@ -170,3 +170,82 @@ export class CdGeoLocationModel {
     cdGeoLocationDisplay?: boolean;
 
 }
+
+export const cdGeoPoliticalTypes = [
+	{
+		"cd_geo_political_type_id" : 1,
+		"cd_geo_political_type_name" : "town"
+	},
+	{
+		"cd_geo_political_type_id" : 2,
+		"cd_geo_political_type_name" : "city"
+	},
+	{
+		"cd_geo_political_type_id" : 3,
+		"cd_geo_political_type_name" : "sub-location"
+	},
+	{
+		"cd_geo_political_type_id" : 4,
+		"cd_geo_political_type_name" : "location"
+	},
+	{
+		"cd_geo_political_type_id" : 5,
+		"cd_geo_political_type_name" : "county"
+	},
+	{
+		"cd_geo_political_type_id" : 6,
+		"cd_geo_political_type_name" : "district"
+	},
+	{
+		"cd_geo_political_type_id" : 7,
+		"cd_geo_political_type_name" : "sub-district"
+	},
+	{
+		"cd_geo_political_type_id" : 8,
+		"cd_geo_political_type_name" : "province"
+	},
+	{
+		"cd_geo_political_type_id" : 9,
+		"cd_geo_political_type_name" : "state"
+	},
+	{
+		"cd_geo_political_type_id" : 10,
+		"cd_geo_political_type_name" : "country"
+	},
+	{
+		"cd_geo_political_type_id" : 11,
+		"cd_geo_political_type_name" : "continent"
+	},
+	{
+		"cd_geo_political_type_id" : 12,
+		"cd_geo_political_type_name" : "continental-region"
+	},
+	{
+		"cd_geo_political_type_id" : 13,
+		"cd_geo_political_type_name" : "canton"
+	},
+	{
+		"cd_geo_political_type_id" : 14,
+		"cd_geo_political_type_name" : "division"
+	},
+	{
+		"cd_geo_political_type_id" : 15,
+		"cd_geo_political_type_name" : "narional-region"
+	},
+	{
+		"cd_geo_political_type_id" : 16,
+		"cd_geo_political_type_name" : "region"
+	},
+	{
+		"cd_geo_political_type_id" : 17,
+		"cd_geo_political_type_name" : "administrative-capital-city"
+	},
+	{
+		"cd_geo_political_type_id" : 18,
+		"cd_geo_political_type_name" : "business-capital-city"
+	},
+	{
+		"cd_geo_political_type_id" : 19,
+		"cd_geo_political_type_name" : "world-globe"
+	}
+]

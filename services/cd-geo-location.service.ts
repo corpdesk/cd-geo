@@ -10,6 +10,7 @@ import { siGet } from '../../../sys/base/base.model';
 import config from '../../../../config';
 import { Logging } from '../../../sys/base/winston.log';
 import { CoopStatPublicFilterService } from '../../coops/services/coop-stat-public-filter.service';
+import { CdGeoLocationViewModel } from '../models/cd-geo-location-view.model';
 
 export class CdGeoLocationService extends CdService {
     logger: Logging;
@@ -276,6 +277,26 @@ export class CdGeoLocationService extends CdService {
         // }
         return this.b.read(req, res, serviceInput)
     }
+
+    async validateGeoLocation(req, res, q: IQuery): Promise<boolean> {
+        const svCdGeoLocation = new CdGeoLocationService();
+        const serviceInput: IServiceInput = {
+          serviceInstance: this,
+          serviceModel: CdGeoLocationViewModel,
+          docName: "CoopMemberService::validateGeoLocation",
+          cmd: {
+            action: "find",
+            query: q,
+          },
+          dSource: 1,
+        };
+        const locations: CdGeoLocationViewModel[] = await svCdGeoLocation.read(req, res, serviceInput)
+        if(locations.length > 0){
+            return true;
+        } else {
+            return false
+        }
+      }
 
     async readSL(req, res, serviceInput: IServiceInput): Promise<any> {
         await this.b.initSqlite(req, res)
