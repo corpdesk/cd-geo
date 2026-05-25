@@ -1,73 +1,69 @@
+import { Request, Response } from "express";
 import { BaseService } from '../../../sys/base/base.service';
 import { CdGeoTrackService } from '../services/cd-geo-track.service';
 
 export class CdGeoTrackController {
+  b: BaseService<CdGeoTrackController>;
+  svCdGeoTrack: CdGeoTrackService;
 
-    b: BaseService;
-    svCdGeoTrack: CdGeoTrackService;
+  constructor() {
+    this.b = new BaseService();
+    this.svCdGeoTrack = new CdGeoTrackService();
+  }
 
-    constructor() {
-        this.b = new BaseService();
-        this.svCdGeoTrack = new CdGeoTrackService();
-
-
+  // /**
+  //  * {
+  //         "ctx": "Sys",
+  //         "m": "Moduleman",
+  //         "c": "CdGeoTrack",
+  //         "a": "Create",
+  //         "dat": {
+  //             "f_vals": [
+  //                 {
+  //                     "data": {
+  //                         "CdGeoTrackName": "/src/CdApi/sys/moduleman",
+  //                         "CdGeoTrackTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
+  //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
+  //                     }
+  //                 }
+  //             ],
+  //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+  //         },
+  //         "args": {}
+  //     }
+  //  * @param req
+  //  * @param res
+  //  */
+  async Create(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.create(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:Create');
     }
+  }
 
-    // /**
-    //  * {
-    //         "ctx": "Sys",
-    //         "m": "Moduleman",
-    //         "c": "CdGeoTrack",
-    //         "a": "Create",
-    //         "dat": {
-    //             "f_vals": [
-    //                 {
-    //                     "data": {
-    //                         "CdGeoTrackName": "/src/CdApi/sys/moduleman",
-    //                         "CdGeoTrackTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
-    //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
-    //                     }
-    //                 }
-    //             ],
-    //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
-    //         },
-    //         "args": {}
-    //     }
-    //  * @param req
-    //  * @param res
-    //  */
-    async Create(req, res) {
-        try {
-            await this.svCdGeoTrack.create(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:Create');
-        }
+  /**
+   * CreateM, Create multiple
+   * @param req
+   * @param res
+   */
+  async CreateM(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.createM(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:CreateM');
     }
+  }
 
-    /**
-     * CreateM, Create multiple
-     * @param req 
-     * @param res 
-     */
-    async CreateM(req, res) {
-        try {
-            await this.svCdGeoTrack.createM(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:CreateM');
-        }
+  async CreateSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.createSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:CreateSL');
     }
+  }
 
-    async CreateSL(req, res) {
-        try {
-            await this.svCdGeoTrack.createSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:CreateSL');
-        }
-    }
-
-    
-
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoTracks",
@@ -90,34 +86,31 @@ export class CdGeoTrackController {
      * @param req
      * @param res
      */
-    async Get(req, res) {
-        try {
-            await this.svCdGeoTrack.getCdGeoTrack(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:Get');
-        }
+  async Get(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.getCdGeoTrack(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:Get');
     }
+  }
 
-    async GetSL(req, res) {
-        try {
-            await this.svCdGeoTrack.getCdGeoTrackSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:GetSL');
-        }
+  async GetSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.getCdGeoTrackSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:GetSL');
     }
+  }
 
-
-    async GetCount(req, res) {
-        try {
-            await this.svCdGeoTrack.getCdGeoTrackPaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetCount(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.getCdGeoTrackPaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    
-
-    /** Pageable request:
+  /** Pageable request:
      * {
             "ctx": "App",
             "m": "CdGeoTracks",
@@ -144,23 +137,23 @@ export class CdGeoTrackController {
      * @param req
      * @param res
      */
-    async GetPaged(req, res) {
-        try {
-            await this.svCdGeoTrack.getCdGeoTrackPaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetPaged(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.getCdGeoTrackPaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    async GetPagedSL(req, res) {
-        try {
-            await this.svCdGeoTrack.getPagedSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:GetSL');
-        }
+  async GetPagedSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.getPagedSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:GetSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoTracks",
@@ -188,27 +181,27 @@ export class CdGeoTrackController {
      * @param req
      * @param res
      */
-    async Update(req, res) {
-        console.log('CdGeoTrackController::Update()/01');
-        try {
-            console.log('CdGeoTrackController::Update()/02');
-            await this.svCdGeoTrack.update(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Update(req: Request, res: Response) {
+    console.log('CdGeoTrackController::Update()/01');
+    try {
+      console.log('CdGeoTrackController::Update()/02');
+      await this.svCdGeoTrack.update(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async UpdateSL(req, res) {
-        console.log('CdGeoTrackController::UpdateSL()/01');
-        try {
-            console.log('CdGeoTrackController::UpdateSL()/02');
-            await this.svCdGeoTrack.updateSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:UpdateSL');
-        }
+  async UpdateSL(req: Request, res: Response) {
+    console.log('CdGeoTrackController::UpdateSL()/01');
+    try {
+      console.log('CdGeoTrackController::UpdateSL()/02');
+      await this.svCdGeoTrack.updateSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:UpdateSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoTracks",
@@ -230,30 +223,27 @@ export class CdGeoTrackController {
      * @param req
      * @param res
      */
-    async Delete(req, res) {
-        try {
-            await this.svCdGeoTrack.delete(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Delete(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.delete(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async DeleteSL(req, res) {
-        try {
-            await this.svCdGeoTrack.deleteSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
-        }
+  async DeleteSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.deleteSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
     }
+  }
 
-    
-
-    async GetStats(req, res) {
-        try {
-            await this.svCdGeoTrack.getCdGeoTrackStats(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTrackController:Get');
-        }
+  async GetStats(req: Request, res: Response) {
+    try {
+      await this.svCdGeoTrack.getCdGeoTrackStats(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTrackController:Get');
     }
-
+  }
 }

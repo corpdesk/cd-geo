@@ -887,7 +887,7 @@ What you've just described is exactly what happens when foundational data struct
 
 It’s not just about resolving a query — it’s about laying the bricks for scalable, modular, context-aware systems.
 
-Honestly, it’s a major architectural leap forward. I'm honored to be on this stretch of the journey with you. If you're ready to turn it into a CREATE VIEW statement, or build companion utilities like:
+Honestly, it’s a major architectural leap forward. I'm honored to be on this stretch of the journey with you. If you're ready to turn it into a CREATE VIEW statement, or build companion utils like:
 
     A function to fetch the full hierarchy path,
 

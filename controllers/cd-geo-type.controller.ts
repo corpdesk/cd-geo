@@ -1,71 +1,69 @@
+import { Request, Response } from "express";
 import { BaseService } from '../../../sys/base/base.service';
 import { CdGeoTypeService } from '../services/cd-geo-type.service';
 
 export class CdGeoTypeController {
+  b: BaseService<CdGeoTypeController>;
+  svCdGeoType: CdGeoTypeService;
 
-    b: BaseService;
-    svCdGeoType: CdGeoTypeService;
+  constructor() {
+    this.b = new BaseService();
+    this.svCdGeoType = new CdGeoTypeService();
+  }
 
-    constructor() {
-        this.b = new BaseService();
-        this.svCdGeoType = new CdGeoTypeService();
+  // /**
+  //  * {
+  //         "ctx": "Sys",
+  //         "m": "Moduleman",
+  //         "c": "CdGeoType",
+  //         "a": "Create",
+  //         "dat": {
+  //             "f_vals": [
+  //                 {
+  //                     "data": {
+  //                         "CdGeoTypeName": "/src/CdApi/sys/moduleman",
+  //                         "CdGeoTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
+  //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
+  //                     }
+  //                 }
+  //             ],
+  //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+  //         },
+  //         "args": {}
+  //     }
+  //  * @param req
+  //  * @param res
+  //  */
+  async Create(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.create(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:Create');
     }
+  }
 
-    // /**
-    //  * {
-    //         "ctx": "Sys",
-    //         "m": "Moduleman",
-    //         "c": "CdGeoType",
-    //         "a": "Create",
-    //         "dat": {
-    //             "f_vals": [
-    //                 {
-    //                     "data": {
-    //                         "CdGeoTypeName": "/src/CdApi/sys/moduleman",
-    //                         "CdGeoTypeTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
-    //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
-    //                     }
-    //                 }
-    //             ],
-    //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
-    //         },
-    //         "args": {}
-    //     }
-    //  * @param req
-    //  * @param res
-    //  */
-    async Create(req, res) {
-        try {
-            await this.svCdGeoType.create(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:Create');
-        }
+  /**
+   * CreateM, Create multiple
+   * @param req
+   * @param res
+   */
+  async CreateM(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.createM(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:CreateM');
     }
+  }
 
-    /**
-     * CreateM, Create multiple
-     * @param req 
-     * @param res 
-     */
-    async CreateM(req, res) {
-        try {
-            await this.svCdGeoType.createM(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:CreateM');
-        }
+  async CreateSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.createSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:CreateSL');
     }
+  }
 
-    async CreateSL(req, res) {
-        try {
-            await this.svCdGeoType.createSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:CreateSL');
-        }
-    }
-
-    
-
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoTypes",
@@ -88,32 +86,31 @@ export class CdGeoTypeController {
      * @param req
      * @param res
      */
-    async Get(req, res) {
-        try {
-            await this.svCdGeoType.getCdGeoType(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:Get');
-        }
+  async Get(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.getCdGeoType(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:Get');
     }
+  }
 
-    async GetSL(req, res) {
-        try {
-            await this.svCdGeoType.getCdGeoTypeSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:GetSL');
-        }
+  async GetSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.getCdGeoTypeSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:GetSL');
     }
+  }
 
-    async GetCount(req, res) {
-        try {
-            await this.svCdGeoType.getCdGeoTypePaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetCount(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.getCdGeoTypePaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-
-    /** Pageable request:
+  /** Pageable request:
      * {
             "ctx": "App",
             "m": "CdGeoTypes",
@@ -140,23 +137,23 @@ export class CdGeoTypeController {
      * @param req
      * @param res
      */
-    async GetPaged(req, res) {
-        try {
-            await this.svCdGeoType.getCdGeoTypePaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetPaged(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.getCdGeoTypePaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    async GetPagedSL(req, res) {
-        try {
-            await this.svCdGeoType.getPagedSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:GetSL');
-        }
+  async GetPagedSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.getPagedSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:GetSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoTypes",
@@ -184,27 +181,27 @@ export class CdGeoTypeController {
      * @param req
      * @param res
      */
-    async Update(req, res) {
-        console.log('CdGeoTypeController::Update()/01');
-        try {
-            console.log('CdGeoTypeController::Update()/02');
-            await this.svCdGeoType.update(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Update(req: Request, res: Response) {
+    console.log('CdGeoTypeController::Update()/01');
+    try {
+      console.log('CdGeoTypeController::Update()/02');
+      await this.svCdGeoType.update(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async UpdateSL(req, res) {
-        console.log('CdGeoTypeController::UpdateSL()/01');
-        try {
-            console.log('CdGeoTypeController::UpdateSL()/02');
-            await this.svCdGeoType.updateSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:UpdateSL');
-        }
+  async UpdateSL(req: Request, res: Response) {
+    console.log('CdGeoTypeController::UpdateSL()/01');
+    try {
+      console.log('CdGeoTypeController::UpdateSL()/02');
+      await this.svCdGeoType.updateSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:UpdateSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoTypes",
@@ -226,30 +223,27 @@ export class CdGeoTypeController {
      * @param req
      * @param res
      */
-    async Delete(req, res) {
-        try {
-            await this.svCdGeoType.delete(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Delete(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.delete(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async DeleteSL(req, res) {
-        try {
-            await this.svCdGeoType.deleteSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
-        }
+  async DeleteSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.deleteSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
     }
+  }
 
-    
-
-    async GetStats(req, res) {
-        try {
-            await this.svCdGeoType.getCdGeoTypeStats(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoTypeController:Get');
-        }
+  async GetStats(req: Request, res: Response) {
+    try {
+      await this.svCdGeoType.getCdGeoTypeStats(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoTypeController:Get');
     }
-
+  }
 }

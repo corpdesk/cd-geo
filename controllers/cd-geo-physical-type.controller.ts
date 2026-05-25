@@ -1,73 +1,84 @@
+import { Request, Response } from 'express';
 import { BaseService } from '../../../sys/base/base.service';
 import { CdGeoPhysicalTypeService } from '../services/cd-geo-physical-type.service';
 
 export class CdGeoPhysicalTypeController {
+  b: BaseService<CdGeoPhysicalTypeController>;
+  svCdGeoPhysicalType: CdGeoPhysicalTypeService;
 
-    b: BaseService;
-    svCdGeoPhysicalType: CdGeoPhysicalTypeService;
+  constructor() {
+    this.b = new BaseService();
+    this.svCdGeoPhysicalType = new CdGeoPhysicalTypeService();
+  }
 
-    constructor() {
-        this.b = new BaseService();
-        this.svCdGeoPhysicalType = new CdGeoPhysicalTypeService();
-
-
+  // /**
+  //  * {
+  //         "ctx": "Sys",
+  //         "m": "Moduleman",
+  //         "c": "CdGeoPhysicalType",
+  //         "a": "Create",
+  //         "dat": {
+  //             "f_vals": [
+  //                 {
+  //                     "data": {
+  //                         "CdGeoPhysicalTypeName": "/src/CdApi/sys/moduleman",
+  //                         "CdGeoPhysicalTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
+  //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
+  //                     }
+  //                 }
+  //             ],
+  //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+  //         },
+  //         "args": {}
+  //     }
+  //  * @param req
+  //  * @param res
+  //  */
+  async Create(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.create(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPhysicalTypeController:Create',
+      );
     }
+  }
 
-    // /**
-    //  * {
-    //         "ctx": "Sys",
-    //         "m": "Moduleman",
-    //         "c": "CdGeoPhysicalType",
-    //         "a": "Create",
-    //         "dat": {
-    //             "f_vals": [
-    //                 {
-    //                     "data": {
-    //                         "CdGeoPhysicalTypeName": "/src/CdApi/sys/moduleman",
-    //                         "CdGeoPhysicalTypeTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
-    //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
-    //                     }
-    //                 }
-    //             ],
-    //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
-    //         },
-    //         "args": {}
-    //     }
-    //  * @param req
-    //  * @param res
-    //  */
-    async Create(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.create(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:Create');
-        }
+  /**
+   * CreateM, Create multiple
+   * @param req
+   * @param res
+   */
+  async CreateM(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.createM(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPhysicalTypeController:CreateM',
+      );
     }
+  }
 
-    /**
-     * CreateM, Create multiple
-     * @param req 
-     * @param res 
-     */
-    async CreateM(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.createM(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:CreateM');
-        }
+  async CreateSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.createSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPhysicalTypeController:CreateSL',
+      );
     }
+  }
 
-    async CreateSL(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.createSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:CreateSL');
-        }
-    }
-
-    
-
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoPhysicalTypes",
@@ -90,33 +101,31 @@ export class CdGeoPhysicalTypeController {
      * @param req
      * @param res
      */
-    async Get(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.getCdGeoPhysicalType(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:Get');
-        }
+  async Get(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.getCdGeoPhysicalType(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:Get');
     }
+  }
 
-    async GetSL(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.getCdGeoPhysicalTypeSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:GetSL');
-        }
+  async GetSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.getCdGeoPhysicalTypeSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:GetSL');
     }
+  }
 
-    async GetCount(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.getCdGeoPhysicalTypePaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetCount(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.getCdGeoPhysicalTypePaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    
-
-    /** Pageable request:
+  /** Pageable request:
      * {
             "ctx": "App",
             "m": "CdGeoPhysicalTypes",
@@ -143,23 +152,23 @@ export class CdGeoPhysicalTypeController {
      * @param req
      * @param res
      */
-    async GetPaged(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.getCdGeoPhysicalTypePaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetPaged(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.getCdGeoPhysicalTypePaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    async GetPagedSL(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.getPagedSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:GetSL');
-        }
+  async GetPagedSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.getPagedSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:GetSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoPhysicalTypes",
@@ -187,27 +196,32 @@ export class CdGeoPhysicalTypeController {
      * @param req
      * @param res
      */
-    async Update(req, res) {
-        console.log('CdGeoPhysicalTypeController::Update()/01');
-        try {
-            console.log('CdGeoPhysicalTypeController::Update()/02');
-            await this.svCdGeoPhysicalType.update(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Update(req: Request, res: Response) {
+    console.log('CdGeoPhysicalTypeController::Update()/01');
+    try {
+      console.log('CdGeoPhysicalTypeController::Update()/02');
+      await this.svCdGeoPhysicalType.update(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async UpdateSL(req, res) {
-        console.log('CdGeoPhysicalTypeController::UpdateSL()/01');
-        try {
-            console.log('CdGeoPhysicalTypeController::UpdateSL()/02');
-            await this.svCdGeoPhysicalType.updateSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:UpdateSL');
-        }
+  async UpdateSL(req: Request, res: Response) {
+    console.log('CdGeoPhysicalTypeController::UpdateSL()/01');
+    try {
+      console.log('CdGeoPhysicalTypeController::UpdateSL()/02');
+      await this.svCdGeoPhysicalType.updateSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPhysicalTypeController:UpdateSL',
+      );
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoPhysicalTypes",
@@ -229,30 +243,27 @@ export class CdGeoPhysicalTypeController {
      * @param req
      * @param res
      */
-    async Delete(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.delete(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Delete(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.delete(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async DeleteSL(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.deleteSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
-        }
+  async DeleteSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.deleteSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
     }
+  }
 
-    
-
-    async GetStats(req, res) {
-        try {
-            await this.svCdGeoPhysicalType.getCdGeoPhysicalTypeStats(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:Get');
-        }
+  async GetStats(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPhysicalType.getCdGeoPhysicalTypeStats(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoPhysicalTypeController:Get');
     }
-
+  }
 }

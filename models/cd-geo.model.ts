@@ -1,11 +1,6 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuery } from '../../../sys/base/IBase';
-
+import { IQuery } from '../../../sys/base/i-base';
 
 // `cd_geo_`.`cd_geo_id`,
 //     `cd_geo_`.`cd_geo_guid`,
@@ -18,50 +13,40 @@ import { IQuery } from '../../../sys/base/IBase';
 //     `cd_geo_`.`cd_geo_guid`,
 //     `cd_geo_`.`cd_geo_political_parent`
 
-@Entity(
-    {
-        name: 'cd_geo_',
-        synchronize: false
-    }
-)
+@Entity({
+  name: 'cd_geo_',
+  synchronize: false,
+})
 export class CdGeoModel {
-    @PrimaryGeneratedColumn(
-        {
-            name: 'cd_geo_id'
-        }
-    )
-    cdGeoId?: number;
+  @PrimaryGeneratedColumn({
+    name: 'cd_geo_id',
+  })
+  cdGeoId?: number;
 
-    @Column({
-        name: 'cd_geo_guid',
-        length: 36,
-        default: uuidv4()
-    })
-    cdGeoGuid?: string;
+  @Column({
+    name: 'cd_geo_guid',
+    length: 36,
+    default: uuidv4(),
+  })
+  cdGeoGuid?: string;
 
-    @Column(
-        {
-            name: 'cd_geo_name',
-            length: 50,
-            nullable: true
-        }
-    )
-    cdGeoName: string;
+  @Column({
+    name: 'cd_geo_name',
+    length: 50,
+    nullable: true,
+  })
+  cdGeoName?: string;
 
-    @Column(
-        {
-            name: 'cd_geo_description',
-            length: 60,
-            default: null
-        })
-    cdGeoDescription: string;
+  @Column({
+    name: 'cd_geo_description',
+    length: 60,
+    default: null,
+  })
+  cdGeoDescription?: string;
 
-    @Column(
-        {
-            name: 'doc_id',
-            default: null
-        }
-    )
-    docId?: number;
-    
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  docId?: number;
 }

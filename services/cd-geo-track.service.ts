@@ -1,44 +1,52 @@
+import { Request, Response } from "express";
 import { BaseService } from '../../../sys/base/base.service';
-import { CdService } from '../../../sys/base/cd.service';
+// import { CdService } from '../../../sys/base/cd.service';
 import { SessionService } from '../../../sys/user/services/session.service';
 import { UserService } from '../../../sys/user/services/user.service';
-import { CreateIParams, IQuery, IRespInfo, IServiceInput, IUser, ICdRequest } from '../../../sys/base/IBase';
+import {
+  IExtServiceInput,
+  IQuery,
+  IRespInfo,
+  IServiceInput,
+  IUser,
+  ICdRequest,
+} from '../../../sys/base/i-base';
 import { CdGeoTrackModel } from '../models/cd-geo-track.model';
 // import { CdGeoTrackViewModel, siGet } from '../models/cd-geo-track-view.model';
 // import { CdGeoTrackViewModel } from '../models/cd-geo-track-view.model';
-import { siGet } from '../../../sys/base/base.model';
-import { Logging } from '../../../sys/base/winston.log';
+// import { siGet } from '../../../sys/base/base.model';
+import { Logging } from '../../../sys/base/winston.log.js';
 
-export class CdGeoTrackService extends CdService {
-    logger: Logging;
-    b: any; // instance of BaseService
-    cdToken: string;
-    srvSess: SessionService;
-    srvUser: UserService;
-    user: IUser;
-    serviceModel: CdGeoTrackModel;
-    modelName: "CdGeoTrackModel";
-    sessModel;
-    // moduleModel: ModuleModel;
+export class CdGeoTrackService {
+  logger: Logging;
+  b: BaseService<CdGeoTrackModel>; // instance of BaseService
+  cdToken?: string;
+  srvSess?: SessionService;
+  srvUser?: UserService;
+  user?: IUser;
+  serviceModel: CdGeoTrackModel;
+  modelName = 'CdGeoTrackModel';
+  sessModel;
+  // moduleModel: ModuleModel;
 
-    /*
-     * create rules
-     */
-    cRules: any = {
-        required: ['cd_geo_proximity_name'],
-        noDuplicate: ['cd_geo_proximity_name']
-    };
-    uRules: any[];
-    dRules: any[];
+  /*
+   * create rules
+   */
+  cRules: any = {
+    required: ['cd_geo_proximity_name'],
+    noDuplicate: ['cd_geo_proximity_name'],
+  };
+  uRules?: any[];
+  dRules?: any[];
 
-    constructor() {
-        super()
-        this.b = new BaseService();
-        this.logger = new Logging();
-        this.serviceModel = new CdGeoTrackModel();
-    }
+  constructor() {
+    // super();
+    this.b = new BaseService();
+    this.logger = new Logging();
+    this.serviceModel = new CdGeoTrackModel();
+  }
 
-     /**
+  /**
      * {
         "ctx": "App",
         "m": "CdGeoTracks",
@@ -72,59 +80,66 @@ export class CdGeoTrackService extends CdService {
      * @param req
      * @param res
      */
-    async create(req, res) {
-        this.logger.logInfo('cd-geo-track/create::validateCreate()/01')
-        
-        const svSess = new SessionService();
-        if (await this.validateCreate(req, res)) {
-            await this.beforeCreate(req, res);
-            const serviceInput = {
-                serviceModel: CdGeoTrackModel,
-                modelName: "CdGeoTrackModel",
-                serviceModelInstance: this.serviceModel,
-                docName: 'Create CdGeoTrack',
-                dSource: 1,
-            }
-            this.logger.logInfo('CdGeoTrackService::create()/serviceInput:', serviceInput)
-            const respData = await this.b.create(req, res, serviceInput);
-            this.b.i.app_msg = 'new CdGeoTrack created';
-            this.b.setAppState(true, this.b.i, svSess.sessResp);
-            this.b.cdResp.data = await respData;
-            const r = await this.b.respond(req, res);
-        } else {
-            this.logger.logInfo('cd-geo-track/create::validateCreate()/02')
-            const r = await this.b.respond(req, res);
-        }
-    }
+  async create(req: Request, res: Response) {
+    this.logger.logInfo('cd-geo-track/create::validateCreate()/01');
 
-    async createSL(req, res) {
-        const svSess = new SessionService();
-        await this.b.initSqlite(req, res)
-        if (await this.validateCreateSL(req, res)) {
-            await this.beforeCreateSL(req, res);
-            const serviceInput = {
-                serviceInstance: this,
-                serviceModel: CdGeoTrackModel,
-                serviceModelInstance: this.serviceModel,
-                docName: 'Create CdGeoTrack',
-                dSource: 1,
-            }
-            const result = await this.b.createSL(req, res, serviceInput)
-            this.b.connSLClose()
-            this.b.i.app_msg = '';
-            this.b.setAppState(true, this.b.i, svSess.sessResp);
-            this.b.cdResp.data = result;
-            const r = await this.b.respond(req, res);
-        } else {
-            const r = await this.b.respond(req, res);
-        }
+    const svSess = new SessionService();
+    if (await this.validateCreate(req, res)) {
+      await this.beforeCreate(req, res);
+      const serviceInput = {
+        serviceModel: CdGeoTrackModel,
+        modelName: 'CdGeoTrackModel',
+        serviceModelInstance: this.serviceModel,
+        docName: 'Create CdGeoTrack',
+        dSource: 1,
+      };
+      this.logger.logInfo(
+        'CdGeoTrackService::create()/serviceInput:',
+        serviceInput,
+      );
+      const respData = await this.b.create(req, res, serviceInput);
+      this.b.i.app_msg = 'new CdGeoTrack created';
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = await respData;
+      const r = await this.b.respond(req, res);
+    } else {
+      this.logger.logInfo('cd-geo-track/create::validateCreate()/02');
+      const r = await this.b.respond(req, res);
     }
+  }
 
-    async createI(req, res, createIParams: CreateIParams): Promise<CdGeoTrackModel | boolean> {
-        return await this.b.createI(req, res, createIParams)
+  async createSL(req: Request, res: Response) {
+    const svSess = new SessionService();
+    await this.b.initSqlite(req, res);
+    if (await this.validateCreateSL(req, res)) {
+      await this.beforeCreateSL(req, res);
+      const serviceInput = {
+        serviceInstance: this,
+        serviceModel: CdGeoTrackModel,
+        serviceModelInstance: this.serviceModel,
+        docName: 'Create CdGeoTrack',
+        dSource: 1,
+      };
+      const result = await this.b.createSL(req, res, serviceInput);
+      this.b.connSLClose();
+      this.b.i.app_msg = '';
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = result;
+      const r = await this.b.respond(req, res);
+    } else {
+      const r = await this.b.respond(req, res);
     }
+  }
 
-    /**
+  async createI(
+    req,
+    res,
+    serviceInputExt: IExtServiceInput<CdGeoTrackModel>,
+  ): Promise<CdGeoTrackModel | boolean> {
+    return await this.b.createI(req, res, serviceInputExt);
+  }
+
+  /**
      * CreateM, Create multiple records
      *  - 1. validate the loop field for multiple data
      *  - 2. loop through the list
@@ -188,535 +203,564 @@ export class CdGeoTrackService extends CdService {
      * @param req 
      * @param res 
      */
-    async createM(req, res) {
-        this.logger.logInfo('CdGeoTrackService::createM()/01')
-        let data = req.post.dat.f_vals[0].data
-        this.logger.logInfo('CdGeoTrackService::createM()/data:', data)
-        // this.b.models.push(CdGeoTrackModel)
-        // this.b.init(req, res)
+  async createM(req: Request, res: Response) {
+    this.logger.logInfo('CdGeoTrackService::createM()/01');
+    let data = (req as any).post.dat.f_vals[0].data;
+    this.logger.logInfo('CdGeoTrackService::createM()/data:', data);
+    // this.b.models.push(CdGeoTrackModel)
+    // this.b.init()
 
-        for (var CdGeoTrackData of data) {
-            this.logger.logInfo('CdGeoTrackData', CdGeoTrackData)
-            const CdGeoTrackQuery: CdGeoTrackModel = CdGeoTrackData;
-            const svCdGeoTrack = new CdGeoTrackService();
-            const si = {
-                serviceInstance: svCdGeoTrack,
-                serviceModel: CdGeoTrackModel,
-                serviceModelInstance: svCdGeoTrack.serviceModel,
-                docName: 'CdGeoTrackService::CreateM',
-                dSource: 1,
-            }
-            const createIParams: CreateIParams = {
-                serviceInput: si,
-                controllerData: CdGeoTrackQuery
-            }
-            let ret = await this.createI(req, res, createIParams)
-            this.logger.logInfo('CdGeoTrackService::createM()/forLoop/ret:', {ret: ret})
-        }
-        // return current sample data
-        // eg first 5
-        // this is just a sample for development
-        // producation can be tailored to requrement 
-        // and the query can be set from the client side.
-        let q = {
-            // "select": [
-            //     "cd-geo-trackName",
-            //     "cd-geo-trackDescription"
-            // ],
-            "where": {},
-            "take": 5,
-            "skip": 0
-        }
-        this.getCdGeoTrack(req, res,q)
+    for (var CdGeoTrackData of data) {
+      this.logger.logInfo('CdGeoTrackData', CdGeoTrackData);
+      const CdGeoTrackQuery: CdGeoTrackModel = CdGeoTrackData;
+      const svCdGeoTrack = new CdGeoTrackService();
+      const si = {
+        serviceInstance: svCdGeoTrack,
+        serviceModel: CdGeoTrackModel,
+        serviceModelInstance: svCdGeoTrack.serviceModel,
+        docName: 'CdGeoTrackService::CreateM',
+        dSource: 1,
+      };
+      const serviceInputExt: IExtServiceInput<CdGeoTrackModel> = {
+        serviceInput: si,
+        entityData: CdGeoTrackQuery,
+      };
+      let ret = await this.createI(req, res, serviceInputExt);
+      this.logger.logInfo('CdGeoTrackService::createM()/forLoop/ret:', {
+        ret: ret,
+      });
     }
+    // return current sample data
+    // eg first 5
+    // this is just a sample for development
+    // producation can be tailored to requrement
+    // and the query can be set from the client side.
+    let q = {
+      // "select": [
+      //     "cd-geo-trackName",
+      //     "cd-geo-trackDescription"
+      // ],
+      where: {},
+      take: 5,
+      skip: 0,
+    };
+    this.getCdGeoTrack(req, res, q);
+  }
 
-    async CdGeoTrackExists(req, res, params): Promise<boolean> {
-        const serviceInput: IServiceInput = {
-            serviceInstance: this,
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::CdGeoTrackExists',
-            cmd: {
-                action: 'find',
-                query: { where: params.filter }
-            },
-            dSource: 1,
-        }
-        return this.b.read(req, res, serviceInput)
-    }
+  async CdGeoTrackExists(req, res, params): Promise<any> {
+    const serviceInput: IServiceInput<CdGeoTrackModel> = {
+      serviceInstance: this,
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::CdGeoTrackExists',
+      cmd: {
+        action: 'find',
+        query: { where: params.filter },
+      },
+      dSource: 1,
+    };
+    return this.b.read(req, res, serviceInput);
+  }
 
-    async beforeCreate(req, res): Promise<any> {
-        this.b.setPlData(req, { key: 'cdGeoTrackGuid', value: this.b.getGuid() });
-        this.b.setPlData(req, { key: 'cdGeoTrackEnabled', value: true });
-        return true;
-    }
+  async beforeCreate(req, res): Promise<any> {
+    this.b.setPlData(req, { key: 'cdGeoTrackGuid', value: this.b.getGuid() });
+    this.b.setPlData(req, { key: 'cdGeoTrackEnabled', value: true });
+    return true;
+  }
 
-    async beforeCreateSL(req, res): Promise<any> {
-        this.b.setPlData(req, { key: 'cdGeoTrackGuid', value: this.b.getGuid() });
-        this.b.setPlData(req, { key: 'cdGeoTrackEnabled', value: true });
-        return true;
-    }
+  async beforeCreateSL(req, res): Promise<any> {
+    this.b.setPlData(req, { key: 'cdGeoTrackGuid', value: this.b.getGuid() });
+    this.b.setPlData(req, { key: 'cdGeoTrackEnabled', value: true });
+    return true;
+  }
 
-    async read(req, res, serviceInput: IServiceInput): Promise<any> {
-        // const serviceInput: IServiceInput = {
-        //     serviceInstance: this,
-        //     serviceModel: CdGeoTrackModel,
-        //     docName: 'CdGeoTrackService::CdGeoTrackExists',
-        //     cmd: {
-        //         action: 'find',
-        //         query: { where: params.filter }
-        //     },
-        //     dSource: 1,
-        // }
-        return this.b.read(req, res, serviceInput)
-    }
+  async read(
+    req,
+    res,
+    serviceInput: IServiceInput<CdGeoTrackModel>,
+  ): Promise<any> {
+    // const serviceInput: IServiceInput<CdGeoTrackModel> = {
+    //     serviceInstance: this,
+    //     serviceModel: CdGeoTrackModel,
+    //     docName: 'CdGeoTrackService::CdGeoTrackExists',
+    //     cmd: {
+    //         action: 'find',
+    //         query: { where: params.filter }
+    //     },
+    //     dSource: 1,
+    // }
+    return this.b.read(req, res, serviceInput);
+  }
 
-    async readSL(req, res, serviceInput: IServiceInput): Promise<any> {
-        await this.b.initSqlite(req, res)
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/q:', q);
-        try {
-            this.b.readSL$(req, res, serviceInput)
-                .subscribe((r) => {
-                    // this.logger.logInfo('CdGeoTrackService::read$()/r:', r)
-                    this.b.i.code = 'CdGeoTrackService::Get';
-                    const svSess = new SessionService();
-                    svSess.sessResp.cd_token = req.post.dat.token;
-                    svSess.sessResp.ttl = svSess.getTtl();
-                    this.b.setAppState(true, this.b.i, svSess.sessResp);
-                    this.b.cdResp.data = r;
-                    this.b.connSLClose()
-                    this.b.respond(req, res)
-                })
-        } catch (e) {
-            this.logger.logInfo('CdGeoTrackService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'CdGeoTrackService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
-    }
-
-    update(req, res) {
-        // this.logger.logInfo('CdGeoTrackService::update()/01');
-        let q = this.b.getQuery(req);
-        q = this.beforeUpdate(q);
-        const serviceInput = {
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::update',
-            cmd: {
-                action: 'update',
-                query: q
-            },
-            dSource: 1
-        }
-        // this.logger.logInfo('CdGeoTrackService::update()/02')
-        this.b.update$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.respond(req, res)
-            })
-    }
-
-    updateSL(req, res) {
-        this.logger.logInfo('CdGeoTrackService::update()/01');
-        let q = this.b.getQuery(req);
-        q = this.beforeUpdateSL(q);
-        const serviceInput = {
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::update',
-            cmd: {
-                action: 'update',
-                query: q
-            },
-            dSource: 1
-        }
-        this.logger.logInfo('CdGeoTrackService::update()/02')
-        this.b.updateSL$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.connSLClose()
-                this.b.respond(req, res)
-            })
-    }
-
-    /**
-     * harmonise any data that can
-     * result in type error;
-     * @param q
-     * @returns
-     */
-    beforeUpdate(q: any) {
-        if (q.update.CdGeoTrackEnabled === '') {
-            q.update.CdGeoTrackEnabled = null;
-        }
-        return q;
-    }
-
-    beforeUpdateSL(q: any) {
-        if (q.update.billEnabled === '') {
-            q.update.billEnabled = null;
-        }
-        return q;
-    }
-
-    async remove(req, res) {
-        //
-    }
-
-    /**
-     * methods for transaction rollback
-     */
-    rbCreate(): number {
-        return 1;
-    }
-
-    rbUpdate(): number {
-        return 1;
-    }
-
-    rbDelete(): number {
-        return 1;
-    }
-
-    async validateCreate(req, res) {
-        this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/01')
+  async readSL(
+    req,
+    res,
+    serviceInput: IServiceInput<CdGeoTrackModel>,
+  ): Promise<any> {
+    await this.b.initSqlite(req, res);
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/q:', q);
+    try {
+      this.b.readSL$(req, res, serviceInput).subscribe((r) => {
+        // this.logger.logInfo('CdGeoTrackService::read$()/r:', r)
+        this.b.i.code = 'CdGeoTrackService::Get';
         const svSess = new SessionService();
-        ///////////////////////////////////////////////////////////////////
-        // 1. Validate against duplication
-        const params = {
-            controllerInstance: this,
-            model: CdGeoTrackModel,
-        }
-        this.b.i.code = 'CdGeoTrackService::validateCreate';
-        let ret = false;
-        if (await this.b.validateUnique(req, res, params)) {
-            this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/02')
-            if (await this.b.validateRequired(req, res, this.cRules)) {
-                this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/03')
-                ret = true;
-            } else {
-                this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/04')
-                ret = false;
-                this.b.i.app_msg = `the required fields ${this.b.isInvalidFields.join(', ')} is missing`;
-                this.b.err.push(this.b.i.app_msg);
-                this.b.setAppState(false, this.b.i, svSess.sessResp);
-            }
-        } else {
-            this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/05')
-            ret = false;
-            this.b.i.app_msg = `duplicate for ${this.cRules.noDuplicate.join(', ')} is not allowed`;
-            this.b.err.push(this.b.i.app_msg);
-            this.b.setAppState(false, this.b.i, svSess.sessResp);
-        }
-        this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/06')
-        ///////////////////////////////////////////////////////////////////
-        // 2. confirm the CdGeoTrackTypeId referenced exists
-        // const pl: CdGeoTrackModel = this.b.getPlData(req);
-        // if ('CdGeoTrackTypeId' in pl) {
-        //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/07')
-        //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/pl:', pl)
-        //     const serviceInput = {
-        //         serviceModel: CdGeoTrackTypeModel,
-        //         docName: 'CdGeoTrackService::validateCreate',
-        //         cmd: {
-        //             action: 'find',
-        //             query: { where: { CdGeoTrackTypeId: pl.CdGeoTrackTypeId } }
-        //         },
-        //         dSource: 1
-        //     }
-        //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/serviceInput:', JSON.stringify(serviceInput))
-        //     const r: any = await this.b.read(req, res, serviceInput)
-        //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/r:', r)
-        //     if (r.length > 0) {
-        //         this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/08')
-        //         ret = true;
-        //     } else {
-        //         this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/10')
-        //         ret = false;
-        //         this.b.i.app_msg = `CdGeoTrack type reference is invalid`;
-        //         this.b.err.push(this.b.i.app_msg);
-        //         this.b.setAppState(false, this.b.i, svSess.sessResp);
-        //     }
-        // } else {
-        //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/11')
-        //     // this.b.i.app_msg = `parentModuleGuid is missing in payload`;
-        //     // this.b.err.push(this.b.i.app_msg);
-        //     //////////////////
-        //     this.b.i.app_msg = `CdGeoTrackTypeId is missing in payload`;
-        //     this.b.err.push(this.b.i.app_msg);
-        //     this.b.setAppState(false, this.b.i, svSess.sessResp);
-        // }
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/12');
-        if (this.b.err.length > 0) {
-            this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/13')
-            ret = false;
-        }
-        return ret;
+        svSess.sessResp.cd_token = (req as any).post.dat.token;
+        svSess.sessResp.ttl = svSess.getTtl();
+        this.b.setAppState(true, this.b.i, svSess.sessResp);
+        this.b.cdResp.data = r;
+        this.b.connSLClose();
+        this.b.respond(req, res);
+      });
+    } catch (e) {
+      // this.logger.logInfo('CdGeoTrackService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'CdGeoTrackService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
     }
+  }
 
-    async validateCreateSL(req, res) {
-        return true;
+  update(req: Request, res: Response) {
+    // this.logger.logInfo('CdGeoTrackService::update()/01');
+    let q = this.b.getQuery(req);
+    q = this.beforeUpdate(q);
+    const serviceInput = {
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::update',
+      cmd: {
+        action: 'update',
+        query: q,
+      },
+      dSource: 1,
+    };
+    // this.logger.logInfo('CdGeoTrackService::update()/02')
+    this.b.update$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.respond(req, res);
+    });
+  }
+
+  updateSL(req: Request, res: Response) {
+    this.logger.logInfo('CdGeoTrackService::update()/01');
+    let q = this.b.getQuery(req);
+    q = this.beforeUpdateSL(q);
+    const serviceInput = {
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::update',
+      cmd: {
+        action: 'update',
+        query: q,
+      },
+      dSource: 1,
+    };
+    this.logger.logInfo('CdGeoTrackService::update()/02');
+    this.b.updateSL$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.connSLClose();
+      this.b.respond(req, res);
+    });
+  }
+
+  /**
+   * harmonise any data that can
+   * result in type error;
+   * @param q
+   * @returns
+   */
+  beforeUpdate(q: any) {
+    if (q.update.CdGeoTrackEnabled === '') {
+      q.update.CdGeoTrackEnabled = null;
     }
+    return q;
+  }
 
-    /**
-     * 
-     * curl test:
-     * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App", "m": "CdGeoTracks","c": "CdGeoTrack","a": "Get","dat": {"f_vals": [{"query": {"where": {"cd-geo-trackName": "Kenya"}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
-     * @param req 
-     * @param res 
-     * @param q 
-     */
-    async getCdGeoTrack(req, res, q: IQuery = null): Promise<any> {
-        
-        if (q === null) {
-            q = this.b.getQuery(req);
-        }
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/f:', q);
-        const serviceInput = siGet(q,this)
-        try {
-            const r = await this.b.read(req, res, serviceInput)
-            this.b.successResponse(req, res, r)
-        } catch (e) {
-            this.logger.logInfo('CdGeoTrackService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'BaseService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
+  beforeUpdateSL(q: any) {
+    if (q.update.billEnabled === '') {
+      q.update.billEnabled = null;
     }
+    return q;
+  }
 
-    /**
-     * Queey params:
-     * - selected data level eg all-available, world, continent, country, continental-region, national-region
-     * - list of selected items 
-     * - eg: 
-     * - on selection of all-available, show list of countries availaable with summary data
-     * - on selection of world show continents with available data
-     * - on selection of continent show list of countries availaable with summary data
-     * - on selection of countrie list of national-resions availaable with summary data
-     * - on selection of national-region given national-resion with summary data
-     * @param q 
-     */
-    async getCdGeoTrackStats(req, res, q: IQuery = null): Promise<any> {
-        if (q === null) {
-            q = this.b.getQuery(req);
-        }
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/f:', q);
-        const serviceInput = siGet(q,this)
-        try {
-            const r = await this.b.read(req, res, serviceInput)
-            this.b.successResponse(req, res, r)
-        } catch (e) {
-            this.logger.logInfo('CdGeoTrackService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'BaseService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
+  async remove(req: Request, res: Response) {
+    //
+  }
+
+  /**
+   * methods for transaction rollback
+   */
+  rbCreate(): number {
+    return 1;
+  }
+
+  rbUpdate(): number {
+    return 1;
+  }
+
+  rbDelete(): number {
+    return 1;
+  }
+
+  async validateCreate(req: Request, res: Response) {
+    this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/01');
+    const svSess = new SessionService();
+    ///////////////////////////////////////////////////////////////////
+    // 1. Validate against duplication
+    const params = {
+      controllerInstance: this,
+      model: CdGeoTrackModel,
+    };
+    this.b.i.code = 'CdGeoTrackService::validateCreate';
+    let ret = false;
+    if (await this.b.validateUnique(req, res, params)) {
+      this.logger.logInfo(
+        'cd-geo-track/CdGeoTrackService::validateCreate()/02',
+      );
+      if (await this.b.validateRequired(req, res, this.cRules)) {
+        this.logger.logInfo(
+          'cd-geo-track/CdGeoTrackService::validateCreate()/03',
+        );
+        ret = true;
+      } else {
+        this.logger.logInfo(
+          'cd-geo-track/CdGeoTrackService::validateCreate()/04',
+        );
+        ret = false;
+        this.b.i.app_msg = `the required fields ${this.b.isInvalidFields.join(', ')} is missing`;
+        this.b.err.push(this.b.i.app_msg);
+        this.b.setAppState(false, this.b.i, svSess.sessResp);
+      }
+    } else {
+      this.logger.logInfo(
+        'cd-geo-track/CdGeoTrackService::validateCreate()/05',
+      );
+      ret = false;
+      this.b.i.app_msg = `duplicate for ${this.cRules.noDuplicate.join(', ')} is not allowed`;
+      this.b.err.push(this.b.i.app_msg);
+      this.b.setAppState(false, this.b.i, svSess.sessResp);
     }
-
-    async getCdGeoTrackSL(req, res) {
-        await this.b.initSqlite(req, res)
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/q:', q);
-        const serviceInput = siGet(q,this)
-        try {
-            this.b.readSL$(req, res, serviceInput)
-                .subscribe((r) => {
-                    // this.logger.logInfo('CdGeoTrackService::read$()/r:', r)
-                    this.b.i.code = 'CdGeoTrackService::Get';
-                    const svSess = new SessionService();
-                    svSess.sessResp.cd_token = req.post.dat.token;
-                    svSess.sessResp.ttl = svSess.getTtl();
-                    this.b.setAppState(true, this.b.i, svSess.sessResp);
-                    this.b.cdResp.data = r;
-                    this.b.connSLClose()
-                    this.b.respond(req, res)
-                })
-        } catch (e) {
-            this.logger.logInfo('CdGeoTrackService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'CdGeoTrackService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
-    }
-
-    // /**
-    //  * 
-    //  * curl test:
-    //  * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App","m": "CdGeoTracks","c": "CdGeoTrack","a": "GetType","dat":{"f_vals": [{"query":{"where": {"CdGeoTrackTypeId":100}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
-    //  * @param req 
-    //  * @param res 
-    //  */
-    // getCdGeoTrackType(req, res) {
-    //     const q = this.b.getQuery(req);
-    //     this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/f:', q);
+    this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/06');
+    ///////////////////////////////////////////////////////////////////
+    // 2. confirm the CdGeoTrackTypeId referenced exists
+    // const pl: CdGeoTrackModel = this.b.getPlData(req);
+    // if ('CdGeoTrackTypeId' in pl) {
+    //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/07')
+    //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/pl:', pl)
     //     const serviceInput = {
     //         serviceModel: CdGeoTrackTypeModel,
-    //         docName: 'CdGeoTrackService::getCdGeoTrackType$',
+    //         docName: 'CdGeoTrackService::validateCreate',
     //         cmd: {
     //             action: 'find',
-    //             query: q
+    //             query: { where: { CdGeoTrackTypeId: pl.CdGeoTrackTypeId } }
     //         },
     //         dSource: 1
     //     }
-    //     try {
-    //         this.b.read$(req, res, serviceInput)
-    //             .subscribe((r) => {
-    //                 // this.logger.logInfo('CdGeoTrackService::read$()/r:', r)
-    //                 this.b.i.code = 'CdGeoTrackController::Get';
-    //                 const svSess = new SessionService();
-    //                 svSess.sessResp.cd_token = req.post.dat.token;
-    //                 svSess.sessResp.ttl = svSess.getTtl();
-    //                 this.b.setAppState(true, this.b.i, svSess.sessResp);
-    //                 this.b.cdResp.data = r;
-    //                 this.b.respond(req, res)
-    //             })
-    //     } catch (e) {
-    //         this.logger.logInfo('CdGeoTrackService::read$()/e:', e)
-    //         this.b.err.push(e.toString());
-    //         const i = {
-    //             messages: this.b.err,
-    //             code: 'BaseService:update',
-    //             app_msg: ''
-    //         };
-    //         this.b.serviceErr(req, res, e, i.code)
-    //         this.b.respond(req, res)
+    //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/serviceInput:', JSON.stringify(serviceInput))
+    //     const r: any = await this.b.read(req, res, serviceInput)
+    //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/r:', r)
+    //     if (r.length > 0) {
+    //         this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/08')
+    //         ret = true;
+    //     } else {
+    //         this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/10')
+    //         ret = false;
+    //         this.b.i.app_msg = `CdGeoTrack type reference is invalid`;
+    //         this.b.err.push(this.b.i.app_msg);
+    //         this.b.setAppState(false, this.b.i, svSess.sessResp);
     //     }
+    // } else {
+    //     this.logger.logInfo('cd-geo-track/CdGeoTrackService::validateCreate()/11')
+    //     // this.b.i.app_msg = `parentModuleGuid is missing in payload`;
+    //     // this.b.err.push(this.b.i.app_msg);
+    //     //////////////////
+    //     this.b.i.app_msg = `CdGeoTrackTypeId is missing in payload`;
+    //     this.b.err.push(this.b.i.app_msg);
+    //     this.b.setAppState(false, this.b.i, svSess.sessResp);
     // }
-
-    /**
-     * 
-     * @param req 
-     * @param res 
-     */
-    getCdGeoTrackPaged(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/q:', q);
-        const serviceInput = {
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::getCdGeoTrack$',
-            cmd: {
-                action: 'find',
-                query: q
-            },
-            dSource: 1
-        }
-        this.b.readCount$(req, res, serviceInput)
-            .subscribe((r) => {
-                this.b.i.code = 'CdGeoTrackController::Get';
-                const svSess = new SessionService();
-                svSess.sessResp.cd_token = req.post.dat.token;
-                svSess.sessResp.ttl = svSess.getTtl();
-                this.b.setAppState(true, this.b.i, svSess.sessResp);
-                this.b.cdResp.data = r;
-                this.b.respond(req, res)
-            })
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/12');
+    if (this.b.err.length > 0) {
+      this.logger.logInfo(
+        'cd-geo-track/CdGeoTrackService::validateCreate()/13',
+      );
+      ret = false;
     }
+    return ret;
+  }
 
-    getPagedSL(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoTrackService::getCdGeoTrackCount()/q:', q);
-        const serviceInput = {
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::getCdGeoTrackCount',
-            cmd: {
-                action: 'find',
-                query: q
-            },
-            dSource: 1
-        }
-        this.b.readCountSL$(req, res, serviceInput)
-            .subscribe((r) => {
-                this.b.i.code = 'CdGeoTrackService::Get';
-                const svSess = new SessionService();
-                svSess.sessResp.cd_token = req.post.dat.token;
-                svSess.sessResp.ttl = svSess.getTtl();
-                this.b.setAppState(true, this.b.i, svSess.sessResp);
-                this.b.cdResp.data = r;
-                this.b.connSLClose()
-                this.b.respond(req, res)
-            })
+  async validateCreateSL(req: Request, res: Response) {
+    return true;
+  }
+
+  /**
+   *
+   * curl test:
+   * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App", "m": "CdGeoTracks","c": "CdGeoTrack","a": "Get","dat": {"f_vals": [{"query": {"where": {"cd-geo-trackName": "Kenya"}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
+   * @param req
+   * @param res
+   * @param q
+   */
+  async getCdGeoTrack(req, res, q?: IQuery): Promise<any> {
+    if (q === null) {
+      q = this.b.getQuery(req);
     }
-
-    // getCdGeoTrackTypeCount(req, res) {
-    //     const q = this.b.getQuery(req);
-    //     this.logger.logInfo('CdGeoTrackService::getCdGeoTrackCount/q:', q);
-    //     const serviceInput = {
-    //         serviceModel: CdGeoTrackTypeModel,
-    //         docName: 'CdGeoTrackService::getCdGeoTrackCount$',
-    //         cmd: {
-    //             action: 'find',
-    //             query: q
-    //         },
-    //         dSource: 1
-    //     }
-    //     this.b.readCount$(req, res, serviceInput)
-    //         .subscribe((r) => {
-    //             this.b.i.code = 'CdGeoTrackController::Get';
-    //             const svSess = new SessionService();
-    //             svSess.sessResp.cd_token = req.post.dat.token;
-    //             svSess.sessResp.ttl = svSess.getTtl();
-    //             this.b.setAppState(true, this.b.i, svSess.sessResp);
-    //             this.b.cdResp.data = r;
-    //             this.b.respond(req, res)
-    //         })
-    // }
-
-    delete(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoTrackService::delete()/q:', q)
-        const serviceInput = {
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::delete',
-            cmd: {
-                action: 'delete',
-                query: q
-            },
-            dSource: 1
-        }
-
-        this.b.delete$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.respond(req, res)
-            })
+    if (!q) {
+      return;
     }
-
-    deleteSL(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoTrackService::deleteSL()/q:', q)
-        const serviceInput = {
-            serviceModel: CdGeoTrackModel,
-            docName: 'CdGeoTrackService::deleteSL',
-            cmd: {
-                action: 'delete',
-                query: q
-            },
-            dSource: 1
-        }
-
-        this.b.deleteSL$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.respond(req, res)
-            })
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/f:', q);
+    const serviceInput = this.b.siGet(
+      q,
+      'CdGeoTrackService::getCdGeoTrack',
+      CdGeoTrackModel,
+    );
+    try {
+      const r = await this.b.read(req, res, serviceInput);
+      this.b.successResponse(req, res, r);
+    } catch (e) {
+      // this.logger.logInfo('CdGeoTrackService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'CdGeoTrackService:getCdGeoTrack',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
     }
+  }
+
+  /**
+   * Queey params:
+   * - selected data level eg all-available, world, continent, country, continental-region, national-region
+   * - list of selected items
+   * - eg:
+   * - on selection of all-available, show list of countries availaable with summary data
+   * - on selection of world show continents with available data
+   * - on selection of continent show list of countries availaable with summary data
+   * - on selection of countrie list of national-resions availaable with summary data
+   * - on selection of national-region given national-resion with summary data
+   * @param q
+   */
+  async getCdGeoTrackStats(req, res, q?: IQuery): Promise<any> {
+    if (q === null) {
+      q = this.b.getQuery(req);
+    }
+    if (!q) {
+      return;
+    }
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/f:', q);
+    const serviceInput = this.b.siGet(
+      q,
+      'CdGeoTrackService::getCdGeoTrack',
+      CdGeoTrackModel,
+    );
+    try {
+      const r = await this.b.read(req, res, serviceInput);
+      this.b.successResponse(req, res, r);
+    } catch (e) {
+      // this.logger.logInfo('CdGeoTrackService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'BaseService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
+    }
+  }
+
+  async getCdGeoTrackSL(req: Request, res: Response) {
+    await this.b.initSqlite(req, res);
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/q:', q);
+    const serviceInput = this.b.siGet(
+      q,
+      'CdGeoTrackService::getCdGeoTrackSL',
+      CdGeoTrackModel,
+    );
+    try {
+      this.b.readSL$(req, res, serviceInput).subscribe((r) => {
+        // this.logger.logInfo('CdGeoTrackService::read$()/r:', r)
+        this.b.i.code = 'CdGeoTrackService::Get';
+        const svSess = new SessionService();
+        svSess.sessResp.cd_token = (req as any).post.dat.token;
+        svSess.sessResp.ttl = svSess.getTtl();
+        this.b.setAppState(true, this.b.i, svSess.sessResp);
+        this.b.cdResp.data = r;
+        this.b.connSLClose();
+        this.b.respond(req, res);
+      });
+    } catch (e) {
+      // this.logger.logInfo('CdGeoTrackService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'CdGeoTrackService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
+    }
+  }
+
+  // /**
+  //  *
+  //  * curl test:
+  //  * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App","m": "CdGeoTracks","c": "CdGeoTrack","a": "GetType","dat":{"f_vals": [{"query":{"where": {"CdGeoTrackTypeId":100}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
+  //  * @param req
+  //  * @param res
+  //  */
+  // getCdGeoTrackType(req: Request, res: Response) {
+  //     const q = this.b.getQuery(req);
+  //     this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/f:', q);
+  //     const serviceInput = {
+  //         serviceModel: CdGeoTrackTypeModel,
+  //         docName: 'CdGeoTrackService::getCdGeoTrackType$',
+  //         cmd: {
+  //             action: 'find',
+  //             query: q
+  //         },
+  //         dSource: 1
+  //     }
+  //     try {
+  //         this.b.read$(req, res, serviceInput)
+  //             .subscribe((r) => {
+  //                 // this.logger.logInfo('CdGeoTrackService::read$()/r:', r)
+  //                 this.b.i.code = 'CdGeoTrackController::Get';
+  //                 const svSess = new SessionService();
+  //                 svSess.sessResp.cd_token = (req as any).post.dat.token;
+  //                 svSess.sessResp.ttl = svSess.getTtl();
+  //                 this.b.setAppState(true, this.b.i, svSess.sessResp);
+  //                 this.b.cdResp.data = r;
+  //                 this.b.respond(req, res)
+  //             })
+  //     } catch (e) {
+  //         this.logger.logInfo('CdGeoTrackService::read$()/e:', e)
+  //         this.b.err.push((e as Error).toString());
+  //         const i = {
+  //             messages: this.b.err,
+  //             code: 'BaseService:update',
+  //             app_msg: ''
+  //         };
+  //         this.b.serviceErr(req, res, e, i.code)
+  //         this.b.respond(req, res)
+  //     }
+  // }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  getCdGeoTrackPaged(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrack/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::getCdGeoTrack$',
+      cmd: {
+        action: 'find',
+        query: q,
+      },
+      dSource: 1,
+    };
+    this.b.readCount$(req, res, serviceInput).subscribe((r) => {
+      this.b.i.code = 'CdGeoTrackController::Get';
+      const svSess = new SessionService();
+      svSess.sessResp.cd_token = (req as any).post.dat.token;
+      svSess.sessResp.ttl = svSess.getTtl();
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = r;
+      this.b.respond(req, res);
+    });
+  }
+
+  getPagedSL(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoTrackService::getCdGeoTrackCount()/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::getCdGeoTrackCount',
+      cmd: {
+        action: 'find',
+        query: q,
+      },
+      dSource: 1,
+    };
+    this.b.readCountSL$(req, res, serviceInput).subscribe((r) => {
+      this.b.i.code = 'CdGeoTrackService::Get';
+      const svSess = new SessionService();
+      svSess.sessResp.cd_token = (req as any).post.dat.token;
+      svSess.sessResp.ttl = svSess.getTtl();
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = r;
+      this.b.connSLClose();
+      this.b.respond(req, res);
+    });
+  }
+
+  // getCdGeoTrackTypeCount(req: Request, res: Response) {
+  //     const q = this.b.getQuery(req);
+  //     this.logger.logInfo('CdGeoTrackService::getCdGeoTrackCount/q:', q);
+  //     const serviceInput = {
+  //         serviceModel: CdGeoTrackTypeModel,
+  //         docName: 'CdGeoTrackService::getCdGeoTrackCount$',
+  //         cmd: {
+  //             action: 'find',
+  //             query: q
+  //         },
+  //         dSource: 1
+  //     }
+  //     this.b.readCount$(req, res, serviceInput)
+  //         .subscribe((r) => {
+  //             this.b.i.code = 'CdGeoTrackController::Get';
+  //             const svSess = new SessionService();
+  //             svSess.sessResp.cd_token = (req as any).post.dat.token;
+  //             svSess.sessResp.ttl = svSess.getTtl();
+  //             this.b.setAppState(true, this.b.i, svSess.sessResp);
+  //             this.b.cdResp.data = r;
+  //             this.b.respond(req, res)
+  //         })
+  // }
+
+  delete(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoTrackService::delete()/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::delete',
+      cmd: {
+        action: 'delete',
+        query: q,
+      },
+      dSource: 1,
+    };
+
+    this.b.delete$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.respond(req, res);
+    });
+  }
+
+  deleteSL(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoTrackService::deleteSL()/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoTrackModel,
+      docName: 'CdGeoTrackService::deleteSL',
+      cmd: {
+        action: 'delete',
+        query: q,
+      },
+      dSource: 1,
+    };
+
+    this.b.deleteSL$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.respond(req, res);
+    });
+  }
 }

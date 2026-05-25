@@ -1,44 +1,52 @@
+import { Request, Response } from "express";
 import { BaseService } from '../../../sys/base/base.service';
-import { CdService } from '../../../sys/base/cd.service';
+// import { CdService } from '../../../sys/base/cd.service';
 import { SessionService } from '../../../sys/user/services/session.service';
 import { UserService } from '../../../sys/user/services/user.service';
-import { CreateIParams, IQuery, IRespInfo, IServiceInput, IUser, ICdRequest } from '../../../sys/base/IBase';
+import {
+  IExtServiceInput,
+  IQuery,
+  IRespInfo,
+  IServiceInput,
+  IUser,
+  ICdRequest,
+} from '../../../sys/base/i-base';
 import { CdGeoProximityModel } from '../models/cd-geo-proximity.model';
 // import { CdGeoProximityViewModel, siGet } from '../models/cd-geo-proximity-view.model';
 // import { CdGeoProximityViewModel } from '../models/cd-geo-proximity-view.model';
-import { siGet } from '../../../sys/base/base.model';
-import { Logging } from '../../../sys/base/winston.log';
+// import { siGet } from '../../../sys/base/base.model';
+import { Logging } from '../../../sys/base/winston.log.js';
 
-export class CdGeoProximityService extends CdService {
-    logger: Logging;
-    b: any; // instance of BaseService
-    cdToken: string;
-    srvSess: SessionService;
-    srvUser: UserService;
-    user: IUser;
-    serviceModel: CdGeoProximityModel;
-    modelName: "CdGeoProximityModel";
-    sessModel;
-    // moduleModel: ModuleModel;
+export class CdGeoProximityService {
+  logger: Logging;
+  b: BaseService<CdGeoProximityModel>; // instance of BaseService
+  cdToken?: string;
+  srvSess?: SessionService;
+  srvUser?: UserService;
+  user?: IUser;
+  serviceModel: CdGeoProximityModel;
+  modelName = 'CdGeoProximityModel';
+  sessModel;
+  // moduleModel: ModuleModel;
 
-    /*
-     * create rules
-     */
-    cRules: any = {
-        required: ['cd_geo_proximity_name'],
-        noDuplicate: ['cd_geo_proximity_name']
-    };
-    uRules: any[];
-    dRules: any[];
+  /*
+   * create rules
+   */
+  cRules: any = {
+    required: ['cd_geo_proximity_name'],
+    noDuplicate: ['cd_geo_proximity_name'],
+  };
+  uRules?: any[];
+  dRules?: any[];
 
-    constructor() {
-        super()
-        this.b = new BaseService();
-        this.logger = new Logging();
-        this.serviceModel = new CdGeoProximityModel();
-    }
+  constructor() {
+    // super();
+    this.b = new BaseService();
+    this.logger = new Logging();
+    this.serviceModel = new CdGeoProximityModel();
+  }
 
-     /**
+  /**
      * {
         "ctx": "App",
         "m": "CdGeoProximitys",
@@ -72,59 +80,66 @@ export class CdGeoProximityService extends CdService {
      * @param req
      * @param res
      */
-    async create(req, res) {
-        this.logger.logInfo('cd-geo-proximity/create::validateCreate()/01')
-        
-        const svSess = new SessionService();
-        if (await this.validateCreate(req, res)) {
-            await this.beforeCreate(req, res);
-            const serviceInput = {
-                serviceModel: CdGeoProximityModel,
-                modelName: "CdGeoProximityModel",
-                serviceModelInstance: this.serviceModel,
-                docName: 'Create CdGeoProximity',
-                dSource: 1,
-            }
-            this.logger.logInfo('CdGeoProximityService::create()/serviceInput:', serviceInput)
-            const respData = await this.b.create(req, res, serviceInput);
-            this.b.i.app_msg = 'new CdGeoProximity created';
-            this.b.setAppState(true, this.b.i, svSess.sessResp);
-            this.b.cdResp.data = await respData;
-            const r = await this.b.respond(req, res);
-        } else {
-            this.logger.logInfo('cd-geo-proximity/create::validateCreate()/02')
-            const r = await this.b.respond(req, res);
-        }
-    }
+  async create(req: Request, res: Response) {
+    this.logger.logInfo('cd-geo-proximity/create::validateCreate()/01');
 
-    async createSL(req, res) {
-        const svSess = new SessionService();
-        await this.b.initSqlite(req, res)
-        if (await this.validateCreateSL(req, res)) {
-            await this.beforeCreateSL(req, res);
-            const serviceInput = {
-                serviceInstance: this,
-                serviceModel: CdGeoProximityModel,
-                serviceModelInstance: this.serviceModel,
-                docName: 'Create CdGeoProximity',
-                dSource: 1,
-            }
-            const result = await this.b.createSL(req, res, serviceInput)
-            this.b.connSLClose()
-            this.b.i.app_msg = '';
-            this.b.setAppState(true, this.b.i, svSess.sessResp);
-            this.b.cdResp.data = result;
-            const r = await this.b.respond(req, res);
-        } else {
-            const r = await this.b.respond(req, res);
-        }
+    const svSess = new SessionService();
+    if (await this.validateCreate(req, res)) {
+      await this.beforeCreate(req, res);
+      const serviceInput: IServiceInput<CdGeoProximityModel> = {
+        serviceModel: CdGeoProximityModel,
+        modelName: 'CdGeoProximityModel',
+        serviceModelInstance: this.serviceModel,
+        docName: 'Create CdGeoProximity',
+        dSource: 1,
+      };
+      this.logger.logInfo(
+        'CdGeoProximityService::create()/serviceInput:',
+        serviceInput,
+      );
+      const respData = await this.b.create(req, res, serviceInput);
+      this.b.i.app_msg = 'new CdGeoProximity created';
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = await respData;
+      const r = await this.b.respond(req, res);
+    } else {
+      this.logger.logInfo('cd-geo-proximity/create::validateCreate()/02');
+      const r = await this.b.respond(req, res);
     }
+  }
 
-    async createI(req, res, createIParams: CreateIParams): Promise<CdGeoProximityModel | boolean> {
-        return await this.b.createI(req, res, createIParams)
+  async createSL(req: Request, res: Response) {
+    const svSess = new SessionService();
+    await this.b.initSqlite(req, res);
+    if (await this.validateCreateSL(req, res)) {
+      await this.beforeCreateSL(req, res);
+      const serviceInput = {
+        serviceInstance: this,
+        serviceModel: CdGeoProximityModel,
+        serviceModelInstance: this.serviceModel,
+        docName: 'Create CdGeoProximity',
+        dSource: 1,
+      };
+      const result = await this.b.createSL(req, res, serviceInput);
+      this.b.connSLClose();
+      this.b.i.app_msg = '';
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = result;
+      const r = await this.b.respond(req, res);
+    } else {
+      const r = await this.b.respond(req, res);
     }
+  }
 
-    /**
+  async createI(
+    req,
+    res,
+    serviceInputExt: IExtServiceInput<CdGeoProximityModel>,
+  ): Promise<CdGeoProximityModel | boolean> {
+    return await this.b.createI(req, res, serviceInputExt);
+  }
+
+  /**
      * CreateM, Create multiple records
      *  - 1. validate the loop field for multiple data
      *  - 2. loop through the list
@@ -188,535 +203,577 @@ export class CdGeoProximityService extends CdService {
      * @param req 
      * @param res 
      */
-    async createM(req, res) {
-        this.logger.logInfo('CdGeoProximityService::createM()/01')
-        let data = req.post.dat.f_vals[0].data
-        this.logger.logInfo('CdGeoProximityService::createM()/data:', data)
-        // this.b.models.push(CdGeoProximityModel)
-        // this.b.init(req, res)
+  async createM(req: Request, res: Response) {
+    this.logger.logInfo('CdGeoProximityService::createM()/01');
+    let data = (req as any).post.dat.f_vals[0].data;
+    this.logger.logInfo('CdGeoProximityService::createM()/data:', data);
+    // this.b.models.push(CdGeoProximityModel)
+    // this.b.init()
 
-        for (var CdGeoProximityData of data) {
-            this.logger.logInfo('CdGeoProximityData', CdGeoProximityData)
-            const CdGeoProximityQuery: CdGeoProximityModel = CdGeoProximityData;
-            const svCdGeoProximity = new CdGeoProximityService();
-            const si = {
-                serviceInstance: svCdGeoProximity,
-                serviceModel: CdGeoProximityModel,
-                serviceModelInstance: svCdGeoProximity.serviceModel,
-                docName: 'CdGeoProximityService::CreateM',
-                dSource: 1,
-            }
-            const createIParams: CreateIParams = {
-                serviceInput: si,
-                controllerData: CdGeoProximityQuery
-            }
-            let ret = await this.createI(req, res, createIParams)
-            this.logger.logInfo('CdGeoProximityService::createM()/forLoop/ret:', {ret: ret})
-        }
-        // return current sample data
-        // eg first 5
-        // this is just a sample for development
-        // producation can be tailored to requrement 
-        // and the query can be set from the client side.
-        let q = {
-            // "select": [
-            //     "cd-geo-proximityName",
-            //     "cd-geo-proximityDescription"
-            // ],
-            "where": {},
-            "take": 5,
-            "skip": 0
-        }
-        this.getCdGeoProximity(req, res,q)
+    for (var CdGeoProximityData of data) {
+      this.logger.logInfo('CdGeoProximityData', CdGeoProximityData);
+      const CdGeoProximityQuery: CdGeoProximityModel = CdGeoProximityData;
+      const svCdGeoProximity = new CdGeoProximityService();
+      const si = {
+        serviceInstance: svCdGeoProximity,
+        serviceModel: CdGeoProximityModel,
+        serviceModelInstance: svCdGeoProximity.serviceModel,
+        docName: 'CdGeoProximityService::CreateM',
+        dSource: 1,
+      };
+      const serviceInputExt: IExtServiceInput<CdGeoProximityModel> = {
+        serviceInput: si,
+        entityData: CdGeoProximityQuery,
+      };
+      let ret = await this.createI(req, res, serviceInputExt);
+      this.logger.logInfo('CdGeoProximityService::createM()/forLoop/ret:', {
+        ret: ret,
+      });
     }
+    // return current sample data
+    // eg first 5
+    // this is just a sample for development
+    // producation can be tailored to requrement
+    // and the query can be set from the client side.
+    let q = {
+      // "select": [
+      //     "cd-geo-proximityName",
+      //     "cd-geo-proximityDescription"
+      // ],
+      where: {},
+      take: 5,
+      skip: 0,
+    };
+    this.getCdGeoProximity(req, res, q);
+  }
 
-    async CdGeoProximityExists(req, res, params): Promise<boolean> {
-        const serviceInput: IServiceInput = {
-            serviceInstance: this,
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::CdGeoProximityExists',
-            cmd: {
-                action: 'find',
-                query: { where: params.filter }
-            },
-            dSource: 1,
-        }
-        return this.b.read(req, res, serviceInput)
-    }
+  async CdGeoProximityExists(req, res, params): Promise<CdGeoProximityModel[]> {
+    const serviceInput: IServiceInput<CdGeoProximityModel> = {
+      serviceInstance: this,
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::CdGeoProximityExists',
+      cmd: {
+        action: 'find',
+        query: { where: params.filter },
+      },
+      dSource: 1,
+    };
+    return (await this.b.read(req, res, serviceInput)) as CdGeoProximityModel[];
+  }
 
-    async beforeCreate(req, res): Promise<any> {
-        this.b.setPlData(req, { key: 'cdGeoProximityGuid', value: this.b.getGuid() });
-        this.b.setPlData(req, { key: 'cdGeoProximityEnabled', value: true });
-        return true;
-    }
+  async beforeCreate(req, res): Promise<any> {
+    this.b.setPlData(req, {
+      key: 'cdGeoProximityGuid',
+      value: this.b.getGuid(),
+    });
+    this.b.setPlData(req, { key: 'cdGeoProximityEnabled', value: true });
+    return true;
+  }
 
-    async beforeCreateSL(req, res): Promise<any> {
-        this.b.setPlData(req, { key: 'cdGeoProximityGuid', value: this.b.getGuid() });
-        this.b.setPlData(req, { key: 'cdGeoProximityEnabled', value: true });
-        return true;
-    }
+  async beforeCreateSL(req, res): Promise<any> {
+    this.b.setPlData(req, {
+      key: 'cdGeoProximityGuid',
+      value: this.b.getGuid(),
+    });
+    this.b.setPlData(req, { key: 'cdGeoProximityEnabled', value: true });
+    return true;
+  }
 
-    async read(req, res, serviceInput: IServiceInput): Promise<any> {
-        // const serviceInput: IServiceInput = {
-        //     serviceInstance: this,
-        //     serviceModel: CdGeoProximityModel,
-        //     docName: 'CdGeoProximityService::CdGeoProximityExists',
-        //     cmd: {
-        //         action: 'find',
-        //         query: { where: params.filter }
-        //     },
-        //     dSource: 1,
-        // }
-        return this.b.read(req, res, serviceInput)
-    }
+  async read(
+    req,
+    res,
+    serviceInput: IServiceInput<CdGeoProximityModel>,
+  ): Promise<any> {
+    // const serviceInput: IServiceInput<CdGeoProximityModel> = {
+    //     serviceInstance: this,
+    //     serviceModel: CdGeoProximityModel,
+    //     docName: 'CdGeoProximityService::CdGeoProximityExists',
+    //     cmd: {
+    //         action: 'find',
+    //         query: { where: params.filter }
+    //     },
+    //     dSource: 1,
+    // }
+    return this.b.read(req, res, serviceInput);
+  }
 
-    async readSL(req, res, serviceInput: IServiceInput): Promise<any> {
-        await this.b.initSqlite(req, res)
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/q:', q);
-        try {
-            this.b.readSL$(req, res, serviceInput)
-                .subscribe((r) => {
-                    // this.logger.logInfo('CdGeoProximityService::read$()/r:', r)
-                    this.b.i.code = 'CdGeoProximityService::Get';
-                    const svSess = new SessionService();
-                    svSess.sessResp.cd_token = req.post.dat.token;
-                    svSess.sessResp.ttl = svSess.getTtl();
-                    this.b.setAppState(true, this.b.i, svSess.sessResp);
-                    this.b.cdResp.data = r;
-                    this.b.connSLClose()
-                    this.b.respond(req, res)
-                })
-        } catch (e) {
-            this.logger.logInfo('CdGeoProximityService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'CdGeoProximityService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
-    }
-
-    update(req, res) {
-        // this.logger.logInfo('CdGeoProximityService::update()/01');
-        let q = this.b.getQuery(req);
-        q = this.beforeUpdate(q);
-        const serviceInput = {
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::update',
-            cmd: {
-                action: 'update',
-                query: q
-            },
-            dSource: 1
-        }
-        // this.logger.logInfo('CdGeoProximityService::update()/02')
-        this.b.update$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.respond(req, res)
-            })
-    }
-
-    updateSL(req, res) {
-        this.logger.logInfo('CdGeoProximityService::update()/01');
-        let q = this.b.getQuery(req);
-        q = this.beforeUpdateSL(q);
-        const serviceInput = {
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::update',
-            cmd: {
-                action: 'update',
-                query: q
-            },
-            dSource: 1
-        }
-        this.logger.logInfo('CdGeoProximityService::update()/02')
-        this.b.updateSL$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.connSLClose()
-                this.b.respond(req, res)
-            })
-    }
-
-    /**
-     * harmonise any data that can
-     * result in type error;
-     * @param q
-     * @returns
-     */
-    beforeUpdate(q: any) {
-        if (q.update.CdGeoProximityEnabled === '') {
-            q.update.CdGeoProximityEnabled = null;
-        }
-        return q;
-    }
-
-    beforeUpdateSL(q: any) {
-        if (q.update.billEnabled === '') {
-            q.update.billEnabled = null;
-        }
-        return q;
-    }
-
-    async remove(req, res) {
-        //
-    }
-
-    /**
-     * methods for transaction rollback
-     */
-    rbCreate(): number {
-        return 1;
-    }
-
-    rbUpdate(): number {
-        return 1;
-    }
-
-    rbDelete(): number {
-        return 1;
-    }
-
-    async validateCreate(req, res) {
-        this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/01')
+  async readSL(
+    req,
+    res,
+    serviceInput: IServiceInput<CdGeoProximityModel>,
+  ): Promise<any> {
+    await this.b.initSqlite(req, res);
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/q:', q);
+    try {
+      this.b.readSL$(req, res, serviceInput).subscribe((r) => {
+        // this.logger.logInfo('CdGeoProximityService::read$()/r:', r)
+        this.b.i.code = 'CdGeoProximityService::Get';
         const svSess = new SessionService();
-        ///////////////////////////////////////////////////////////////////
-        // 1. Validate against duplication
-        const params = {
-            controllerInstance: this,
-            model: CdGeoProximityModel,
-        }
-        this.b.i.code = 'CdGeoProximityService::validateCreate';
-        let ret = false;
-        if (await this.b.validateUnique(req, res, params)) {
-            this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/02')
-            if (await this.b.validateRequired(req, res, this.cRules)) {
-                this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/03')
-                ret = true;
-            } else {
-                this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/04')
-                ret = false;
-                this.b.i.app_msg = `the required fields ${this.b.isInvalidFields.join(', ')} is missing`;
-                this.b.err.push(this.b.i.app_msg);
-                this.b.setAppState(false, this.b.i, svSess.sessResp);
-            }
-        } else {
-            this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/05')
-            ret = false;
-            this.b.i.app_msg = `duplicate for ${this.cRules.noDuplicate.join(', ')} is not allowed`;
-            this.b.err.push(this.b.i.app_msg);
-            this.b.setAppState(false, this.b.i, svSess.sessResp);
-        }
-        this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/06')
-        ///////////////////////////////////////////////////////////////////
-        // 2. confirm the CdGeoProximityTypeId referenced exists
-        // const pl: CdGeoProximityModel = this.b.getPlData(req);
-        // if ('CdGeoProximityTypeId' in pl) {
-        //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/07')
-        //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/pl:', pl)
-        //     const serviceInput = {
-        //         serviceModel: CdGeoProximityTypeModel,
-        //         docName: 'CdGeoProximityService::validateCreate',
-        //         cmd: {
-        //             action: 'find',
-        //             query: { where: { CdGeoProximityTypeId: pl.CdGeoProximityTypeId } }
-        //         },
-        //         dSource: 1
-        //     }
-        //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/serviceInput:', JSON.stringify(serviceInput))
-        //     const r: any = await this.b.read(req, res, serviceInput)
-        //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/r:', r)
-        //     if (r.length > 0) {
-        //         this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/08')
-        //         ret = true;
-        //     } else {
-        //         this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/10')
-        //         ret = false;
-        //         this.b.i.app_msg = `CdGeoProximity type reference is invalid`;
-        //         this.b.err.push(this.b.i.app_msg);
-        //         this.b.setAppState(false, this.b.i, svSess.sessResp);
-        //     }
-        // } else {
-        //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/11')
-        //     // this.b.i.app_msg = `parentModuleGuid is missing in payload`;
-        //     // this.b.err.push(this.b.i.app_msg);
-        //     //////////////////
-        //     this.b.i.app_msg = `CdGeoProximityTypeId is missing in payload`;
-        //     this.b.err.push(this.b.i.app_msg);
-        //     this.b.setAppState(false, this.b.i, svSess.sessResp);
-        // }
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/12');
-        if (this.b.err.length > 0) {
-            this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/13')
-            ret = false;
-        }
-        return ret;
+        svSess.sessResp.cd_token = (req as any).post.dat.token;
+        svSess.sessResp.ttl = svSess.getTtl();
+        this.b.setAppState(true, this.b.i, svSess.sessResp);
+        this.b.cdResp.data = r;
+        this.b.connSLClose();
+        this.b.respond(req, res);
+      });
+    } catch (e) {
+      //   this.logger.logInfo('CdGeoProximityService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'CdGeoProximityService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
     }
+  }
 
-    async validateCreateSL(req, res) {
-        return true;
+  update(req: Request, res: Response) {
+    // this.logger.logInfo('CdGeoProximityService::update()/01');
+    let q = this.b.getQuery(req);
+    q = this.beforeUpdate(q);
+    const serviceInput = {
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::update',
+      cmd: {
+        action: 'update',
+        query: q,
+      },
+      dSource: 1,
+    };
+    // this.logger.logInfo('CdGeoProximityService::update()/02')
+    this.b.update$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.respond(req, res);
+    });
+  }
+
+  updateSL(req: Request, res: Response) {
+    this.logger.logInfo('CdGeoProximityService::update()/01');
+    let q = this.b.getQuery(req);
+    q = this.beforeUpdateSL(q);
+    const serviceInput = {
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::update',
+      cmd: {
+        action: 'update',
+        query: q,
+      },
+      dSource: 1,
+    };
+    this.logger.logInfo('CdGeoProximityService::update()/02');
+    this.b.updateSL$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.connSLClose();
+      this.b.respond(req, res);
+    });
+  }
+
+  /**
+   * harmonise any data that can
+   * result in type error;
+   * @param q
+   * @returns
+   */
+  beforeUpdate(q: any) {
+    if (q.update.CdGeoProximityEnabled === '') {
+      q.update.CdGeoProximityEnabled = null;
     }
+    return q;
+  }
 
-    /**
-     * 
-     * curl test:
-     * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App", "m": "CdGeoProximitys","c": "CdGeoProximity","a": "Get","dat": {"f_vals": [{"query": {"where": {"cd-geo-proximityName": "Kenya"}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
-     * @param req 
-     * @param res 
-     * @param q 
-     */
-    async getCdGeoProximity(req, res, q: IQuery = null): Promise<any> {
-        
-        if (q === null) {
-            q = this.b.getQuery(req);
-        }
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/f:', q);
-        const serviceInput = siGet(q,this)
-        try {
-            const r = await this.b.read(req, res, serviceInput)
-            this.b.successResponse(req, res, r)
-        } catch (e) {
-            this.logger.logInfo('CdGeoProximityService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'BaseService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
+  beforeUpdateSL(q: any) {
+    if (q.update.billEnabled === '') {
+      q.update.billEnabled = null;
     }
+    return q;
+  }
 
-    /**
-     * Queey params:
-     * - selected data level eg all-available, world, continent, country, continental-region, national-region
-     * - list of selected items 
-     * - eg: 
-     * - on selection of all-available, show list of countries availaable with summary data
-     * - on selection of world show continents with available data
-     * - on selection of continent show list of countries availaable with summary data
-     * - on selection of countrie list of national-resions availaable with summary data
-     * - on selection of national-region given national-resion with summary data
-     * @param q 
-     */
-    async getCdGeoProximityStats(req, res, q: IQuery = null): Promise<any> {
-        if (q === null) {
-            q = this.b.getQuery(req);
-        }
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/f:', q);
-        const serviceInput = siGet(q,this)
-        try {
-            const r = await this.b.read(req, res, serviceInput)
-            this.b.successResponse(req, res, r)
-        } catch (e) {
-            this.logger.logInfo('CdGeoProximityService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'BaseService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
+  async remove(req: Request, res: Response) {
+    //
+  }
+
+  /**
+   * methods for transaction rollback
+   */
+  rbCreate(): number {
+    return 1;
+  }
+
+  rbUpdate(): number {
+    return 1;
+  }
+
+  rbDelete(): number {
+    return 1;
+  }
+
+  async validateCreate(req: Request, res: Response) {
+    this.logger.logInfo(
+      'cd-geo-proximity/CdGeoProximityService::validateCreate()/01',
+    );
+    const svSess = new SessionService();
+    ///////////////////////////////////////////////////////////////////
+    // 1. Validate against duplication
+    const params = {
+      controllerInstance: this,
+      model: CdGeoProximityModel,
+    };
+    this.b.i.code = 'CdGeoProximityService::validateCreate';
+    let ret = false;
+    if (await this.b.validateUnique(req, res, params)) {
+      this.logger.logInfo(
+        'cd-geo-proximity/CdGeoProximityService::validateCreate()/02',
+      );
+      if (await this.b.validateRequired(req, res, this.cRules)) {
+        this.logger.logInfo(
+          'cd-geo-proximity/CdGeoProximityService::validateCreate()/03',
+        );
+        ret = true;
+      } else {
+        this.logger.logInfo(
+          'cd-geo-proximity/CdGeoProximityService::validateCreate()/04',
+        );
+        ret = false;
+        this.b.i.app_msg = `the required fields ${this.b.isInvalidFields.join(', ')} is missing`;
+        this.b.err.push(this.b.i.app_msg);
+        this.b.setAppState(false, this.b.i, svSess.sessResp);
+      }
+    } else {
+      this.logger.logInfo(
+        'cd-geo-proximity/CdGeoProximityService::validateCreate()/05',
+      );
+      ret = false;
+      this.b.i.app_msg = `duplicate for ${this.cRules.noDuplicate.join(', ')} is not allowed`;
+      this.b.err.push(this.b.i.app_msg);
+      this.b.setAppState(false, this.b.i, svSess.sessResp);
     }
-
-    async getCdGeoProximitySL(req, res) {
-        await this.b.initSqlite(req, res)
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/q:', q);
-        const serviceInput = siGet(q,this)
-        try {
-            this.b.readSL$(req, res, serviceInput)
-                .subscribe((r) => {
-                    // this.logger.logInfo('CdGeoProximityService::read$()/r:', r)
-                    this.b.i.code = 'CdGeoProximityService::Get';
-                    const svSess = new SessionService();
-                    svSess.sessResp.cd_token = req.post.dat.token;
-                    svSess.sessResp.ttl = svSess.getTtl();
-                    this.b.setAppState(true, this.b.i, svSess.sessResp);
-                    this.b.cdResp.data = r;
-                    this.b.connSLClose()
-                    this.b.respond(req, res)
-                })
-        } catch (e) {
-            this.logger.logInfo('CdGeoProximityService::read$()/e:', e)
-            this.b.err.push(e.toString());
-            const i = {
-                messages: this.b.err,
-                code: 'CdGeoProximityService:update',
-                app_msg: ''
-            };
-            await this.b.serviceErr(req, res, e, i.code)
-            await this.b.respond(req, res)
-        }
-    }
-
-    // /**
-    //  * 
-    //  * curl test:
-    //  * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App","m": "CdGeoProximitys","c": "CdGeoProximity","a": "GetType","dat":{"f_vals": [{"query":{"where": {"CdGeoProximityTypeId":100}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
-    //  * @param req 
-    //  * @param res 
-    //  */
-    // getCdGeoProximityType(req, res) {
-    //     const q = this.b.getQuery(req);
-    //     this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/f:', q);
+    this.logger.logInfo(
+      'cd-geo-proximity/CdGeoProximityService::validateCreate()/06',
+    );
+    ///////////////////////////////////////////////////////////////////
+    // 2. confirm the CdGeoProximityTypeId referenced exists
+    // const pl: CdGeoProximityModel = this.b.getPlData(req);
+    // if ('CdGeoProximityTypeId' in pl) {
+    //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/07')
+    //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/pl:', pl)
     //     const serviceInput = {
     //         serviceModel: CdGeoProximityTypeModel,
-    //         docName: 'CdGeoProximityService::getCdGeoProximityType$',
+    //         docName: 'CdGeoProximityService::validateCreate',
     //         cmd: {
     //             action: 'find',
-    //             query: q
+    //             query: { where: { CdGeoProximityTypeId: pl.CdGeoProximityTypeId } }
     //         },
     //         dSource: 1
     //     }
-    //     try {
-    //         this.b.read$(req, res, serviceInput)
-    //             .subscribe((r) => {
-    //                 // this.logger.logInfo('CdGeoProximityService::read$()/r:', r)
-    //                 this.b.i.code = 'CdGeoProximityController::Get';
-    //                 const svSess = new SessionService();
-    //                 svSess.sessResp.cd_token = req.post.dat.token;
-    //                 svSess.sessResp.ttl = svSess.getTtl();
-    //                 this.b.setAppState(true, this.b.i, svSess.sessResp);
-    //                 this.b.cdResp.data = r;
-    //                 this.b.respond(req, res)
-    //             })
-    //     } catch (e) {
-    //         this.logger.logInfo('CdGeoProximityService::read$()/e:', e)
-    //         this.b.err.push(e.toString());
-    //         const i = {
-    //             messages: this.b.err,
-    //             code: 'BaseService:update',
-    //             app_msg: ''
-    //         };
-    //         this.b.serviceErr(req, res, e, i.code)
-    //         this.b.respond(req, res)
+    //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/serviceInput:', JSON.stringify(serviceInput))
+    //     const r: any = await this.b.read(req, res, serviceInput)
+    //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/r:', r)
+    //     if (r.length > 0) {
+    //         this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/08')
+    //         ret = true;
+    //     } else {
+    //         this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/10')
+    //         ret = false;
+    //         this.b.i.app_msg = `CdGeoProximity type reference is invalid`;
+    //         this.b.err.push(this.b.i.app_msg);
+    //         this.b.setAppState(false, this.b.i, svSess.sessResp);
     //     }
+    // } else {
+    //     this.logger.logInfo('cd-geo-proximity/CdGeoProximityService::validateCreate()/11')
+    //     // this.b.i.app_msg = `parentModuleGuid is missing in payload`;
+    //     // this.b.err.push(this.b.i.app_msg);
+    //     //////////////////
+    //     this.b.i.app_msg = `CdGeoProximityTypeId is missing in payload`;
+    //     this.b.err.push(this.b.i.app_msg);
+    //     this.b.setAppState(false, this.b.i, svSess.sessResp);
     // }
-
-    /**
-     * 
-     * @param req 
-     * @param res 
-     */
-    getCdGeoProximityPaged(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/q:', q);
-        const serviceInput = {
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::getCdGeoProximity$',
-            cmd: {
-                action: 'find',
-                query: q
-            },
-            dSource: 1
-        }
-        this.b.readCount$(req, res, serviceInput)
-            .subscribe((r) => {
-                this.b.i.code = 'CdGeoProximityController::Get';
-                const svSess = new SessionService();
-                svSess.sessResp.cd_token = req.post.dat.token;
-                svSess.sessResp.ttl = svSess.getTtl();
-                this.b.setAppState(true, this.b.i, svSess.sessResp);
-                this.b.cdResp.data = r;
-                this.b.respond(req, res)
-            })
+    this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/12');
+    if (this.b.err.length > 0) {
+      this.logger.logInfo(
+        'cd-geo-proximity/CdGeoProximityService::validateCreate()/13',
+      );
+      ret = false;
     }
+    return ret;
+  }
 
-    getPagedSL(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoProximityService::getCdGeoProximityCount()/q:', q);
-        const serviceInput = {
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::getCdGeoProximityCount',
-            cmd: {
-                action: 'find',
-                query: q
-            },
-            dSource: 1
-        }
-        this.b.readCountSL$(req, res, serviceInput)
-            .subscribe((r) => {
-                this.b.i.code = 'CdGeoProximityService::Get';
-                const svSess = new SessionService();
-                svSess.sessResp.cd_token = req.post.dat.token;
-                svSess.sessResp.ttl = svSess.getTtl();
-                this.b.setAppState(true, this.b.i, svSess.sessResp);
-                this.b.cdResp.data = r;
-                this.b.connSLClose()
-                this.b.respond(req, res)
-            })
+  async validateCreateSL(req: Request, res: Response) {
+    return true;
+  }
+
+  /**
+   *
+   * curl test:
+   * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App", "m": "CdGeoProximitys","c": "CdGeoProximity","a": "Get","dat": {"f_vals": [{"query": {"where": {"cd-geo-proximityName": "Kenya"}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
+   * @param req
+   * @param res
+   * @param q
+   */
+  async getCdGeoProximity(req, res, q?: IQuery): Promise<any> {
+    if (q === null) {
+      q = this.b.getQuery(req);
     }
-
-    // getCdGeoProximityTypeCount(req, res) {
-    //     const q = this.b.getQuery(req);
-    //     this.logger.logInfo('CdGeoProximityService::getCdGeoProximityCount/q:', q);
-    //     const serviceInput = {
-    //         serviceModel: CdGeoProximityTypeModel,
-    //         docName: 'CdGeoProximityService::getCdGeoProximityCount$',
-    //         cmd: {
-    //             action: 'find',
-    //             query: q
-    //         },
-    //         dSource: 1
-    //     }
-    //     this.b.readCount$(req, res, serviceInput)
-    //         .subscribe((r) => {
-    //             this.b.i.code = 'CdGeoProximityController::Get';
-    //             const svSess = new SessionService();
-    //             svSess.sessResp.cd_token = req.post.dat.token;
-    //             svSess.sessResp.ttl = svSess.getTtl();
-    //             this.b.setAppState(true, this.b.i, svSess.sessResp);
-    //             this.b.cdResp.data = r;
-    //             this.b.respond(req, res)
-    //         })
-    // }
-
-    delete(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoProximityService::delete()/q:', q)
-        const serviceInput = {
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::delete',
-            cmd: {
-                action: 'delete',
-                query: q
-            },
-            dSource: 1
-        }
-
-        this.b.delete$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.respond(req, res)
-            })
+    if (!q) {
+      return;
     }
-
-    deleteSL(req, res) {
-        const q = this.b.getQuery(req);
-        this.logger.logInfo('CdGeoProximityService::deleteSL()/q:', q)
-        const serviceInput = {
-            serviceModel: CdGeoProximityModel,
-            docName: 'CdGeoProximityService::deleteSL',
-            cmd: {
-                action: 'delete',
-                query: q
-            },
-            dSource: 1
-        }
-
-        this.b.deleteSL$(req, res, serviceInput)
-            .subscribe((ret) => {
-                this.b.cdResp.data = ret;
-                this.b.respond(req, res)
-            })
+    this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/f:', q);
+    const serviceInput = this.b.siGet(
+      q,
+      'CdGeoProximityService::getCdGeoProximity/',
+      CdGeoProximityModel,
+    );
+    try {
+      const r = await this.b.read(req, res, serviceInput);
+      this.b.successResponse(req, res, r);
+    } catch (e) {
+      // this.logger.logInfo('CdGeoProximityService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'BaseService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
     }
+  }
+
+  /**
+   * Queey params:
+   * - selected data level eg all-available, world, continent, country, continental-region, national-region
+   * - list of selected items
+   * - eg:
+   * - on selection of all-available, show list of countries availaable with summary data
+   * - on selection of world show continents with available data
+   * - on selection of continent show list of countries availaable with summary data
+   * - on selection of countrie list of national-resions availaable with summary data
+   * - on selection of national-region given national-resion with summary data
+   * @param q
+   */
+  async getCdGeoProximityStats(req, res, q?: IQuery): Promise<any> {
+    if (q === null) {
+      q = this.b.getQuery(req);
+    }
+    if (!q) {
+      return;
+    }
+    this.logger.logInfo('CdGeoProximityService::getCdGeoProximityStats/f:', q);
+    const serviceInput = this.b.siGet(
+      q,
+      'CdGeoProximityService::getCdGeoProximityStats/',
+      CdGeoProximityModel,
+    );
+    try {
+      const r = await this.b.read(req, res, serviceInput);
+      this.b.successResponse(req, res, r);
+    } catch (e) {
+      // this.logger.logInfo('CdGeoProximityService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'BaseService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
+    }
+  }
+
+  async getCdGeoProximitySL(req: Request, res: Response) {
+    await this.b.initSqlite(req, res);
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoProximityService::getCdGeoProximitySL/q:', q);
+    const serviceInput = this.b.siGet(
+      q,
+      'CdGeoProximityService::getCdGeoProximitySL/',
+      CdGeoProximityModel,
+    );
+    try {
+      this.b.readSL$(req, res, serviceInput).subscribe((r) => {
+        // this.logger.logInfo('CdGeoProximityService::read$()/r:', r)
+        this.b.i.code = 'CdGeoProximityService::Get';
+        const svSess = new SessionService();
+        svSess.sessResp.cd_token = (req as any).post.dat.token;
+        svSess.sessResp.ttl = svSess.getTtl();
+        this.b.setAppState(true, this.b.i, svSess.sessResp);
+        this.b.cdResp.data = r;
+        this.b.connSLClose();
+        this.b.respond(req, res);
+      });
+    } catch (e) {
+      // this.logger.logInfo('CdGeoProximityService::read$()/e:', e);
+      this.b.err.push((e as Error).toString());
+      const i = {
+        messages: this.b.err,
+        code: 'CdGeoProximityService:update',
+        app_msg: '',
+      };
+      await this.b.serviceErr(req, res, e, i.code);
+      await this.b.respond(req, res);
+    }
+  }
+
+  // /**
+  //  *
+  //  * curl test:
+  //  * curl -k -X POST -H 'Content-Type: application/json' -d '{"ctx": "App","m": "CdGeoProximitys","c": "CdGeoProximity","a": "GetType","dat":{"f_vals": [{"query":{"where": {"CdGeoProximityTypeId":100}}}],"token":"08f45393-c10e-4edd-af2c-bae1746247a1"},"args": null}' http://localhost:3001 -v  | jq '.'
+  //  * @param req
+  //  * @param res
+  //  */
+  // getCdGeoProximityType(req: Request, res: Response) {
+  //     const q = this.b.getQuery(req);
+  //     this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/f:', q);
+  //     const serviceInput = {
+  //         serviceModel: CdGeoProximityTypeModel,
+  //         docName: 'CdGeoProximityService::getCdGeoProximityType$',
+  //         cmd: {
+  //             action: 'find',
+  //             query: q
+  //         },
+  //         dSource: 1
+  //     }
+  //     try {
+  //         this.b.read$(req, res, serviceInput)
+  //             .subscribe((r) => {
+  //                 // this.logger.logInfo('CdGeoProximityService::read$()/r:', r)
+  //                 this.b.i.code = 'CdGeoProximityController::Get';
+  //                 const svSess = new SessionService();
+  //                 svSess.sessResp.cd_token = (req as any).post.dat.token;
+  //                 svSess.sessResp.ttl = svSess.getTtl();
+  //                 this.b.setAppState(true, this.b.i, svSess.sessResp);
+  //                 this.b.cdResp.data = r;
+  //                 this.b.respond(req, res)
+  //             })
+  //     } catch (e) {
+  //         this.logger.logInfo('CdGeoProximityService::read$()/e:', e)
+  //         this.b.err.push((e as Error).toString());
+  //         const i = {
+  //             messages: this.b.err,
+  //             code: 'BaseService:update',
+  //             app_msg: ''
+  //         };
+  //         this.b.serviceErr(req, res, e, i.code)
+  //         this.b.respond(req, res)
+  //     }
+  // }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  getCdGeoProximityPaged(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoProximityService::getCdGeoProximity/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::getCdGeoProximity$',
+      cmd: {
+        action: 'find',
+        query: q,
+      },
+      dSource: 1,
+    };
+    this.b.readCount$(req, res, serviceInput).subscribe((r) => {
+      this.b.i.code = 'CdGeoProximityController::Get';
+      const svSess = new SessionService();
+      svSess.sessResp.cd_token = (req as any).post.dat.token;
+      svSess.sessResp.ttl = svSess.getTtl();
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = r;
+      this.b.respond(req, res);
+    });
+  }
+
+  getPagedSL(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo(
+      'CdGeoProximityService::getCdGeoProximityCount()/q:',
+      q,
+    );
+    const serviceInput = {
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::getCdGeoProximityCount',
+      cmd: {
+        action: 'find',
+        query: q,
+      },
+      dSource: 1,
+    };
+    this.b.readCountSL$(req, res, serviceInput).subscribe((r) => {
+      this.b.i.code = 'CdGeoProximityService::Get';
+      const svSess = new SessionService();
+      svSess.sessResp.cd_token = (req as any).post.dat.token;
+      svSess.sessResp.ttl = svSess.getTtl();
+      this.b.setAppState(true, this.b.i, svSess.sessResp);
+      this.b.cdResp.data = r;
+      this.b.connSLClose();
+      this.b.respond(req, res);
+    });
+  }
+
+  // getCdGeoProximityTypeCount(req: Request, res: Response) {
+  //     const q = this.b.getQuery(req);
+  //     this.logger.logInfo('CdGeoProximityService::getCdGeoProximityCount/q:', q);
+  //     const serviceInput = {
+  //         serviceModel: CdGeoProximityTypeModel,
+  //         docName: 'CdGeoProximityService::getCdGeoProximityCount$',
+  //         cmd: {
+  //             action: 'find',
+  //             query: q
+  //         },
+  //         dSource: 1
+  //     }
+  //     this.b.readCount$(req, res, serviceInput)
+  //         .subscribe((r) => {
+  //             this.b.i.code = 'CdGeoProximityController::Get';
+  //             const svSess = new SessionService();
+  //             svSess.sessResp.cd_token = (req as any).post.dat.token;
+  //             svSess.sessResp.ttl = svSess.getTtl();
+  //             this.b.setAppState(true, this.b.i, svSess.sessResp);
+  //             this.b.cdResp.data = r;
+  //             this.b.respond(req, res)
+  //         })
+  // }
+
+  delete(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoProximityService::delete()/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::delete',
+      cmd: {
+        action: 'delete',
+        query: q,
+      },
+      dSource: 1,
+    };
+
+    this.b.delete$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.respond(req, res);
+    });
+  }
+
+  deleteSL(req: Request, res: Response) {
+    const q = this.b.getQuery(req);
+    this.logger.logInfo('CdGeoProximityService::deleteSL()/q:', q);
+    const serviceInput = {
+      serviceModel: CdGeoProximityModel,
+      docName: 'CdGeoProximityService::deleteSL',
+      cmd: {
+        action: 'delete',
+        query: q,
+      },
+      dSource: 1,
+    };
+
+    this.b.deleteSL$(req, res, serviceInput).subscribe((ret: any) => {
+      this.b.cdResp.data = ret;
+      this.b.respond(req, res);
+    });
+  }
 }

@@ -1,11 +1,6 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuery } from '../../../sys/base/IBase';
-
+import { IQuery } from '../../../sys/base/i-base';
 
 // `cd_geo_track`.`cd_geo_track_id`,
 //     `cd_geo_track`.`lat`,
@@ -21,135 +16,105 @@ import { IQuery } from '../../../sys/base/IBase';
 //     `cd_geo_track`.`doc_id`,
 //     `cd_geo_track`.`cd_geo_track_guid`
 
-@Entity(
-    {
-        name: 'cd_geo_track',
-        synchronize: false
-    }
-)
+@Entity({
+  name: 'cd_geo_track',
+  synchronize: false,
+})
 export class CdGeoTrackModel {
-    @PrimaryGeneratedColumn(
-        {
-            name: 'cd_geo_track_id'
-        }
-    )
-    cdGeoTrackId?: number;
+  @PrimaryGeneratedColumn({
+    name: 'cd_geo_track_id',
+  })
+  cdGeoTrackId?: number;
 
-    @Column({
-        name: 'cd_geo_track_guid',
-        length: 36,
-        default: uuidv4()
-    })
-    cdGeoTrackGuid?: string;
+  @Column({
+    name: 'cd_geo_track_guid',
+    length: 36,
+    default: uuidv4(),
+  })
+  cdGeoTrackGuid?: string;
 
-    @Column(
-        {
-            name: 'cd_geo_track_name',
-            length: 50,
-            nullable: true
-        }
-    )
-    cdGeoTrackName: string;
+  @Column({
+    name: 'cd_geo_track_name',
+    length: 50,
+    nullable: true,
+  })
+  cdGeoTrackName?: string;
 
-    @Column(
-        {
-            name: 'cd_geo_track_description',
-            length: 60,
-            default: null
-        })
-    cdGeoTrackDescription: string;
+  @Column({
+    name: 'cd_geo_track_description',
+    length: 60,
+    default: null,
+  })
+  cdGeoTrackDescription?: string;
 
-    @Column(
-        {
-            name: 'doc_id',
-            default: null
-        }
-    )
-    docId?: number;
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  docId?: number;
 
-    @Column(
-        {
-            name: 'lat',
-            default: null
-        }
-    )
-    lat?: number;
+  @Column({
+    name: 'lat',
+    default: null,
+  })
+  lat?: number;
 
-    @Column(
-        {
-            name: 'long',
-            default: null
-        }
-    )
-    long?: number;
+  @Column({
+    name: 'long',
+    default: null,
+  })
+  long?: number;
 
-    @Column(
-        {
-            name: 'place_id',
-            default: null
-        }
-    )
-    placeId?: number;
+  @Column({
+    name: 'place_id',
+    default: null,
+  })
+  placeId?: number;
 
-    // timestampMs
+  // timestampMs
 
-    @Column(
-        {
-            name: 'timestampMs'
-        }
-    )
-    timestampMs: string;
+  @Column({
+    name: 'timestampMs',
+  })
+  timestampMs?: string;
 
-    // accuracy
-    @Column(
-        {
-            name: 'accuracy',
-            default: null
-        }
-    )
-    accuracy?: number;
+  // accuracy
+  @Column({
+    name: 'accuracy',
+    default: null,
+  })
+  accuracy?: number;
 
-    // cd_obj_type_id
-    @Column(
-        {
-            name: 'cd_obj_type_id',
-            default: null
-        }
-    )
-    cdObjType_id?: number;
+  // cd_obj_type_id
+  @Column({
+    name: 'cd_obj_type_id',
+    default: null,
+  })
+  cdObjType_id?: number;
 
-    // cd_obj_id
-    @Column(
-        {
-            name: 'cd_obj_id',
-            default: null
-        }
-    )
-    cdObjId?: number;
+  // cd_obj_id
+  @Column({
+    name: 'cd_obj_id',
+    default: null,
+  })
+  cdObjId?: number;
 
-    // t
-    @Column(
-        {
-            name: 't'
-        }
-    )
-    t: string;
+  // t
+  @Column({
+    name: 't',
+  })
+  t?: string;
 
-    // mitch_id
-    @Column(
-        {
-            name: 'mitch_id',
-            default: null
-        }
-    )
-    mitchId?: number;
+  // mitch_id
+  @Column({
+    name: 'mitch_id',
+    default: null,
+  })
+  mitchId?: number;
 
-    // un
-    @Column(
-        {
-            name: 'un'
-        }
-    )
-    un: string;
-    
+  // un
+  @Column({
+    name: 'un',
+  })
+  un?: string;
 }

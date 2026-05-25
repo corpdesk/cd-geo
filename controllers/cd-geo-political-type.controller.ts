@@ -1,73 +1,84 @@
+import { Request, Response } from 'express';
 import { BaseService } from '../../../sys/base/base.service';
 import { CdGeoPoliticalTypeService } from '../services/cd-geo-political-type.service';
 
 export class CdGeoPoliticalTypeController {
+  b: BaseService<CdGeoPoliticalTypeController>;
+  svCdGeoPoliticalType: CdGeoPoliticalTypeService;
 
-    b: BaseService;
-    svCdGeoPoliticalType: CdGeoPoliticalTypeService;
+  constructor() {
+    this.b = new BaseService();
+    this.svCdGeoPoliticalType = new CdGeoPoliticalTypeService();
+  }
 
-    constructor() {
-        this.b = new BaseService();
-        this.svCdGeoPoliticalType = new CdGeoPoliticalTypeService();
-
-
+  // /**
+  //  * {
+  //         "ctx": "Sys",
+  //         "m": "Moduleman",
+  //         "c": "CdGeoPoliticalType",
+  //         "a": "Create",
+  //         "dat": {
+  //             "f_vals": [
+  //                 {
+  //                     "data": {
+  //                         "CdGeoPoliticalTypeName": "/src/CdApi/sys/moduleman",
+  //                         "CdGeoPoliticalTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
+  //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
+  //                     }
+  //                 }
+  //             ],
+  //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+  //         },
+  //         "args": {}
+  //     }
+  //  * @param req
+  //  * @param res
+  //  */
+  async Create(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.create(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPoliticalTypeController:Create',
+      );
     }
+  }
 
-    // /**
-    //  * {
-    //         "ctx": "Sys",
-    //         "m": "Moduleman",
-    //         "c": "CdGeoPoliticalType",
-    //         "a": "Create",
-    //         "dat": {
-    //             "f_vals": [
-    //                 {
-    //                     "data": {
-    //                         "CdGeoPoliticalTypeName": "/src/CdApi/sys/moduleman",
-    //                         "CdGeoPoliticalTypeTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
-    //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
-    //                     }
-    //                 }
-    //             ],
-    //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
-    //         },
-    //         "args": {}
-    //     }
-    //  * @param req
-    //  * @param res
-    //  */
-    async Create(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.create(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:Create');
-        }
+  /**
+   * CreateM, Create multiple
+   * @param req
+   * @param res
+   */
+  async CreateM(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.createM(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPoliticalTypeController:CreateM',
+      );
     }
+  }
 
-    /**
-     * CreateM, Create multiple
-     * @param req 
-     * @param res 
-     */
-    async CreateM(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.createM(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:CreateM');
-        }
+  async CreateSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.createSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPoliticalTypeController:CreateSL',
+      );
     }
+  }
 
-    async CreateSL(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.createSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:CreateSL');
-        }
-    }
-
-    
-
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoPoliticalTypes",
@@ -90,33 +101,36 @@ export class CdGeoPoliticalTypeController {
      * @param req
      * @param res
      */
-    async Get(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.getCdGeoPoliticalType(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:Get');
-        }
+  async Get(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.getCdGeoPoliticalType(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:Get');
     }
+  }
 
-    async GetSL(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.getCdGeoPoliticalTypeSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:GetSL');
-        }
+  async GetSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.getCdGeoPoliticalTypeSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPoliticalTypeController:GetSL',
+      );
     }
+  }
 
-    async GetCount(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.getCdGeoPoliticalTypePaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetCount(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.getCdGeoPoliticalTypePaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    
-
-    /** Pageable request:
+  /** Pageable request:
      * {
             "ctx": "App",
             "m": "CdGeoPoliticalTypes",
@@ -143,23 +157,28 @@ export class CdGeoPoliticalTypeController {
      * @param req
      * @param res
      */
-    async GetPaged(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.getCdGeoPoliticalTypePaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetPaged(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.getCdGeoPoliticalTypePaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    async GetPagedSL(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.getPagedSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:GetSL');
-        }
+  async GetPagedSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.getPagedSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPoliticalTypeController:GetSL',
+      );
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoPoliticalTypes",
@@ -187,27 +206,32 @@ export class CdGeoPoliticalTypeController {
      * @param req
      * @param res
      */
-    async Update(req, res) {
-        console.log('CdGeoPoliticalTypeController::Update()/01');
-        try {
-            console.log('CdGeoPoliticalTypeController::Update()/02');
-            await this.svCdGeoPoliticalType.update(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Update(req: Request, res: Response) {
+    console.log('CdGeoPoliticalTypeController::Update()/01');
+    try {
+      console.log('CdGeoPoliticalTypeController::Update()/02');
+      await this.svCdGeoPoliticalType.update(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async UpdateSL(req, res) {
-        console.log('CdGeoPoliticalTypeController::UpdateSL()/01');
-        try {
-            console.log('CdGeoPoliticalTypeController::UpdateSL()/02');
-            await this.svCdGeoPoliticalType.updateSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:UpdateSL');
-        }
+  async UpdateSL(req: Request, res: Response) {
+    console.log('CdGeoPoliticalTypeController::UpdateSL()/01');
+    try {
+      console.log('CdGeoPoliticalTypeController::UpdateSL()/02');
+      await this.svCdGeoPoliticalType.updateSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(
+        req,
+        res,
+        e,
+        'CdGeoPoliticalTypeController:UpdateSL',
+      );
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoPoliticalTypes",
@@ -229,30 +253,27 @@ export class CdGeoPoliticalTypeController {
      * @param req
      * @param res
      */
-    async Delete(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.delete(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Delete(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.delete(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async DeleteSL(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.deleteSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
-        }
+  async DeleteSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.deleteSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
     }
+  }
 
-    
-
-    async GetStats(req, res) {
-        try {
-            await this.svCdGeoPoliticalType.getCdGeoPoliticalTypeStats(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:Get');
-        }
+  async GetStats(req: Request, res: Response) {
+    try {
+      await this.svCdGeoPoliticalType.getCdGeoPoliticalTypeStats(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoPoliticalTypeController:Get');
     }
-
+  }
 }

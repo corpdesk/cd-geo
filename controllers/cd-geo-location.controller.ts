@@ -1,73 +1,69 @@
+import { Request, Response } from 'express';
 import { BaseService } from '../../../sys/base/base.service';
 import { CdGeoLocationService } from '../services/cd-geo-location.service';
 
 export class CdGeoLocationController {
+  b: BaseService<CdGeoLocationController>;
+  svCdGeoLocation: CdGeoLocationService;
 
-    b: BaseService;
-    svCdGeoLocation: CdGeoLocationService;
+  constructor() {
+    this.b = new BaseService();
+    this.svCdGeoLocation = new CdGeoLocationService();
+  }
 
-    constructor() {
-        this.b = new BaseService();
-        this.svCdGeoLocation = new CdGeoLocationService();
-
-
+  // /**
+  //  * {
+  //         "ctx": "Sys",
+  //         "m": "Moduleman",
+  //         "c": "CdGeoLocation",
+  //         "a": "Create",
+  //         "dat": {
+  //             "f_vals": [
+  //                 {
+  //                     "data": {
+  //                         "CdGeoLocationName": "/src/CdApi/sys/moduleman",
+  //                         "CdGeoLocationTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
+  //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
+  //                     }
+  //                 }
+  //             ],
+  //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
+  //         },
+  //         "args": {}
+  //     }
+  //  * @param req
+  //  * @param res
+  //  */
+  async Create(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.create(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:Create');
     }
+  }
 
-    // /**
-    //  * {
-    //         "ctx": "Sys",
-    //         "m": "Moduleman",
-    //         "c": "CdGeoLocation",
-    //         "a": "Create",
-    //         "dat": {
-    //             "f_vals": [
-    //                 {
-    //                     "data": {
-    //                         "CdGeoLocationName": "/src/CdApi/sys/moduleman",
-    //                         "CdGeoLocationTypeId": "7ae902cd-5bc5-493b-a739-125f10ca0268",
-    //                         "parentModuleGuid": "00e7c6a8-83e4-40e2-bd27-51fcff9ce63b"
-    //                     }
-    //                 }
-    //             ],
-    //             "token": "3ffd785f-e885-4d37-addf-0e24379af338"
-    //         },
-    //         "args": {}
-    //     }
-    //  * @param req
-    //  * @param res
-    //  */
-    async Create(req, res) {
-        try {
-            await this.svCdGeoLocation.create(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:Create');
-        }
+  /**
+   * CreateM, Create multiple
+   * @param req
+   * @param res
+   */
+  async CreateM(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.createM(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:CreateM');
     }
+  }
 
-    /**
-     * CreateM, Create multiple
-     * @param req 
-     * @param res 
-     */
-    async CreateM(req, res) {
-        try {
-            await this.svCdGeoLocation.createM(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:CreateM');
-        }
+  async CreateSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.createSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:CreateSL');
     }
+  }
 
-    async CreateSL(req, res) {
-        try {
-            await this.svCdGeoLocation.createSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:CreateSL');
-        }
-    }
-
-    
-
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoLocations",
@@ -90,34 +86,31 @@ export class CdGeoLocationController {
      * @param req
      * @param res
      */
-    async Get(req, res) {
-        try {
-            await this.svCdGeoLocation.getCdGeoLocation(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:Get');
-        }
+  async Get(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.getCdGeoLocation(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:Get');
     }
+  }
 
-    async GetSL(req, res) {
-        try {
-            await this.svCdGeoLocation.getCdGeoLocationSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:GetSL');
-        }
+  async GetSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.getCdGeoLocationSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:GetSL');
     }
+  }
 
-
-    async GetCount(req, res) {
-        try {
-            await this.svCdGeoLocation.getCdGeoLocationPaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetCount(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.getCdGeoLocationPaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    
-
-    /** Pageable request:
+  /** Pageable request:
      * {
             "ctx": "App",
             "m": "CdGeoLocations",
@@ -144,23 +137,23 @@ export class CdGeoLocationController {
      * @param req
      * @param res
      */
-    async GetPaged(req, res) {
-        try {
-            await this.svCdGeoLocation.getCdGeoLocationPaged(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Get');
-        }
+  async GetPaged(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.getCdGeoLocationPaged(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Get');
     }
+  }
 
-    async GetPagedSL(req, res) {
-        try {
-            await this.svCdGeoLocation.getPagedSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:GetSL');
-        }
+  async GetPagedSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.getPagedSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:GetSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoLocations",
@@ -188,27 +181,27 @@ export class CdGeoLocationController {
      * @param req
      * @param res
      */
-    async Update(req, res) {
-        console.log('CdGeoLocationController::Update()/01');
-        try {
-            console.log('CdGeoLocationController::Update()/02');
-            await this.svCdGeoLocation.update(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Update(req: Request, res: Response) {
+    console.log('CdGeoLocationController::Update()/01');
+    try {
+      console.log('CdGeoLocationController::Update()/02');
+      await this.svCdGeoLocation.update(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async UpdateSL(req, res) {
-        console.log('CdGeoLocationController::UpdateSL()/01');
-        try {
-            console.log('CdGeoLocationController::UpdateSL()/02');
-            await this.svCdGeoLocation.updateSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:UpdateSL');
-        }
+  async UpdateSL(req: Request, res: Response) {
+    console.log('CdGeoLocationController::UpdateSL()/01');
+    try {
+      console.log('CdGeoLocationController::UpdateSL()/02');
+      await this.svCdGeoLocation.updateSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:UpdateSL');
     }
+  }
 
-    /**
+  /**
      * {
             "ctx": "App",
             "m": "CdGeoLocations",
@@ -230,74 +223,70 @@ export class CdGeoLocationController {
      * @param req
      * @param res
      */
-    async Delete(req, res) {
-        try {
-            await this.svCdGeoLocation.delete(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'ModuleController:Update');
-        }
+  async Delete(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.delete(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'ModuleController:Update');
     }
+  }
 
-    async DeleteSL(req, res) {
-        try {
-            await this.svCdGeoLocation.deleteSL(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
-        }
+  async DeleteSL(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.deleteSL(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'BillController:DeleteSL');
     }
+  }
 
-    
-
-    async GetStats(req, res) {
-        try {
-            await this.svCdGeoLocation.getCdGeoLocationStats(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'CdGeoLocationController:Get');
-        }
+  async GetStats(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.getCdGeoLocationStats(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'CdGeoLocationController:Get');
     }
+  }
 
-    // GetContinent
-    /**
-     * connect to https://www.back4app.com api
-     * and fetch continent by objectId
-     * @param req 
-     * @param res 
-     */
-    async GetContinent(req, res){
-        try {
-            await this.svCdGeoLocation.GetContinent(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'GetContinent:Create');
-        }
+  // GetContinent
+  /**
+   * connect to https://www.back4app.com api
+   * and fetch continent by objectId
+   * @param req
+   * @param res
+   */
+  async GetContinent(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.GetContinent(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'GetContinent:Create');
     }
+  }
 
-    /**
-     * connect to https://www.back4app.com api
-     * and fetch country by objectId
-     * @param req 
-     * @param res 
-     */
-    async GetCountry(req, res){
-        try {
-            await this.svCdGeoLocation.GetCountry(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'GetCountry:Create');
-        }
+  /**
+   * connect to https://www.back4app.com api
+   * and fetch country by objectId
+   * @param req
+   * @param res
+   */
+  async GetCountry(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.GetCountry(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'GetCountry:Create');
     }
+  }
 
-
-    /**
-     * connect to https://www.back4app.com api
-     * and fetch Subdivisions, States and Provinces
-     * @param req 
-     * @param res 
-     */
-    async SubdivisionStatesProvinces(req, res){
-        try {
-            await this.svCdGeoLocation.SubdivisionStatesProvinces(req, res);
-        } catch (e) {
-            await this.b.serviceErr(req, res, e, 'SubdivisionStatesProvinces:Create');
-        }
+  /**
+   * connect to https://www.back4app.com api
+   * and fetch Subdivisions, States and Provinces
+   * @param req
+   * @param res
+   */
+  async SubdivisionStatesProvinces(req: Request, res: Response) {
+    try {
+      await this.svCdGeoLocation.SubdivisionStatesProvinces(req, res);
+    } catch (e) {
+      await this.b.serviceErr(req, res, e, 'SubdivisionStatesProvinces:Create');
     }
-
+  }
 }

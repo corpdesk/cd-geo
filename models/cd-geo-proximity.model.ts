@@ -1,11 +1,6 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuery } from '../../../sys/base/IBase';
-
+import { IQuery } from '../../../sys/base/i-base';
 
 // `cd_geo_proximity`.`cd_geo_proximity_id`,
 //     `cd_geo_proximity`.`cd_geo_proximity_guid`,
@@ -18,60 +13,47 @@ import { IQuery } from '../../../sys/base/IBase';
 //     `cd_geo_proximity`.`cd_geo_proximity_guid`,
 //     `cd_geo_proximity`.`cd_geo_political_parent`
 
-@Entity(
-    {
-        name: 'cd_geo_proximity',
-        synchronize: false
-    }
-)
+@Entity({
+  name: 'cd_geo_proximity',
+  synchronize: false,
+})
 export class CdGeoProximityModel {
-    @PrimaryGeneratedColumn(
-        {
-            name: 'cd_geo_proximity_id'
-        }
-    )
-    cdGeoProximityId?: number;
+  @PrimaryGeneratedColumn({
+    name: 'cd_geo_proximity_id',
+  })
+  cdGeoProximityId?: number;
 
-    @Column({
-        name: 'cd_geo_proximity_guid',
-        length: 36,
-        default: uuidv4()
-    })
-    cdGeoProximityGuid?: string;
+  @Column({
+    name: 'cd_geo_proximity_guid',
+    length: 36,
+    default: uuidv4(),
+  })
+  cdGeoProximityGuid?: string;
 
-    @Column(
-        {
-            name: 'cd_geo_proximity_name',
-            length: 50,
-            nullable: true
-        }
-    )
-    cdGeoProximityName: string;
+  @Column({
+    name: 'cd_geo_proximity_name',
+    length: 50,
+    nullable: true,
+  })
+  cdGeoProximityName?: string;
 
-    @Column(
-        {
-            name: 'cd_geo_proximity_description',
-            length: 60,
-            default: null
-        })
-    cdGeoProximityDescription: string;
+  @Column({
+    name: 'cd_geo_proximity_description',
+    length: 60,
+    default: null,
+  })
+  cdGeoProximityDescription?: string;
 
-    @Column(
-        {
-            name: 'doc_id',
-            default: null
-        }
-    )
-    docId?: number;
+  @Column({
+    name: 'doc_id',
+    default: null,
+  })
+  docId?: number;
 
-    
-    @Column(
-        {
-            name: 'cd_geo_proximity_data',
-            type: 'json',
-            default: null
-        })
-    cdGeoProximityData: string;
-
-
+  @Column({
+    name: 'cd_geo_proximity_data',
+    type: 'json',
+    default: null,
+  })
+  cdGeoProximityData?: string;
 }
